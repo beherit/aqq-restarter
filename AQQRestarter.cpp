@@ -26,6 +26,8 @@ wchar_t *AnsiTowchar_t(AnsiString Str) //zamiana AnsiString->wchar_t*
 }
 //---------------------------------------------------------------------------
 
+bool Polish; //Do lokalizacji
+
 //Utworzenie obiektow do struktur
 PluginAction TPluginActionMenu;
 PluginAction TPluginActionMakra;
@@ -85,7 +87,7 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,2,2);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,3,0);
   TPluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
@@ -100,8 +102,11 @@ void PrzypiszSkrotMenu()
 {
   TPluginActionMenu.cbSize = sizeof(PluginAction);
   TPluginActionMenu.pszName = (wchar_t*)L"AQQRestarterPrzypiszSkrotMenu";
-  TPluginActionMenu.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
-  TPluginActionMenu.Position = 12;
+  if(Polish==1)
+   TPluginActionMenu.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
+  else
+   TPluginActionMenu.pszCaption = (wchar_t*) L"Restart AQQ";
+  TPluginActionMenu.Position = 11;
   TPluginActionMenu.IconIndex = plugin_icon_idx;
   TPluginActionMenu.pszService = (wchar_t*) L"serwis_aqqrestart";
   TPluginActionMenu.pszPopupName = (wchar_t*) L"muProgram";
@@ -114,7 +119,10 @@ void PrzypiszSkrotMakra()
 {
   TPluginActionMakra.cbSize = sizeof(PluginAction);
   TPluginActionMakra.pszName = (wchar_t*)L"AQQRestarterPrzypiszSkrotMakra";
-  TPluginActionMakra.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
+  if(Polish==1)
+   TPluginActionMakra.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
+  else
+   TPluginActionMakra.pszCaption = (wchar_t*) L"Restart AQQ";
   TPluginActionMakra.Position = 14;
   TPluginActionMakra.IconIndex = plugin_icon_idx;
   TPluginActionMakra.pszService = (wchar_t*) L"serwis_aqqrestart";
@@ -127,6 +135,14 @@ void PrzypiszSkrotMakra()
 extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
 {
   TPluginLink = *Link;
+
+  //Rozpoznanie lokalizacji
+  AnsiString Lang = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETLANGSTR,0,(LPARAM)(L"Password")));
+  if(Lang=="Has³o")
+   Polish=1;
+  else
+   Polish=0;
+  //Koniec
 
   //Katalog aktywnej kompozycji
   AnsiString PluginPath = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,(WPARAM)(hInstance),0));

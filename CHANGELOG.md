@@ -1,3 +1,7 @@
+1.0.3.0
+-----
+* Dodanie angielskiej lokalizacji.
+
 1.0.2.2
 -----
 * Ma³a poprawka w kodzie wtyczki. 
