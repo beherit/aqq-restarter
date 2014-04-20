@@ -1,3 +1,8 @@
+2.0.2.0
+-----
+* Przepisanie wtyczki pod kompilator CodeGear C++ Builder 2010.
+* SDK: Dodano funkcjê AQQRESTARTER_SYSTEM_RESTART = "AQQRestarter/System/Restart".
+
 2.0.1.0
 -----
 * Ukrywanie okna logowania i chmurki informacyjnej poprzez WinAPI.
