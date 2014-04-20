@@ -1,17 +1,13 @@
 //---------------------------------------------------------------------------
-
 #ifndef RestarterFrmH
 #define RestarterFrmH
 //---------------------------------------------------------------------------
+#include "IdBaseComponent.hpp"
+#include "IdCoder.hpp"
+#include "IdCoder3to4.hpp"
+#include "IdCoderMIME.hpp"
 #include <Classes.hpp>
-#include <Controls.hpp>
-#include <StdCtrls.hpp>
-#include <Forms.hpp>
 #include <ExtCtrls.hpp>
-#include <IdBaseComponent.hpp>
-#include <IdCoder.hpp>
-#include <IdCoder3to4.hpp>
-#include <IdCoderMIME.hpp>
 //---------------------------------------------------------------------------
 class TRestarterForm : public TForm
 {

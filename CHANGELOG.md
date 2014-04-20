@@ -1,3 +1,8 @@
+2.1.1.0
+-----
+* Zmiany w pliku wspomagaj¹cym restart AQQ.
+* Optymalizacja kodu.
+
 2.1.0.0
 -----
 * Zmiany w pliku wspomagaj¹cym restart AQQ.
