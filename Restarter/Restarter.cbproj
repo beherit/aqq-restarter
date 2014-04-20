@@ -61,16 +61,16 @@
 			<TASM_Debugging>None</TASM_Debugging>
 		</PropertyGroup>
 		<ItemGroup>
-			<CppCompile Include="RestarterFrm.cpp">
-				<Form>RestarterForm</Form>
-				<DependentOn>RestarterFrm.h</DependentOn>
-				<BuildOrder>2</BuildOrder>
+			<CppCompile Include="Restarter.cpp">
+				<BuildOrder>0</BuildOrder>
 			</CppCompile>
 			<ResFiles Include="Restarter.res">
 				<BuildOrder>1</BuildOrder>
 			</ResFiles>
-			<CppCompile Include="Restarter.cpp">
-				<BuildOrder>0</BuildOrder>
+			<CppCompile Include="RestarterFrm.cpp">
+				<Form>RestarterForm</Form>
+				<DependentOn>RestarterFrm.h</DependentOn>
+				<BuildOrder>2</BuildOrder>
 			</CppCompile>
 			<FormResources Include="RestarterFrm.dfm"/>
 			<BuildConfiguration Include="Base">
@@ -138,10 +138,7 @@
 						<Parameters Name="LoadAllSymbols">True</Parameters>
 						<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
 					</Parameters>
-					<Excluded_Packages>
-						<Excluded_Packages Name="$(BDS)\bin\bcboffice2k120.bpl">CodeGear C++Builder Office 2000 Servers Package</Excluded_Packages>
-						<Excluded_Packages Name="$(BDS)\bin\bcbofficexp120.bpl">CodeGear C++Builder Office XP Servers Package</Excluded_Packages>
-					</Excluded_Packages>
+					<Excluded_Packages/>
 					<ProjectProperties>
 						<ProjectProperties Name="AutoShowDeps">False</ProjectProperties>
 						<ProjectProperties Name="ManagePaths">True</ProjectProperties>
