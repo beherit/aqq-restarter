@@ -1,3 +1,7 @@
+1.0.2.2
+-----
+* Ma³a poprawka w kodzie wtyczki. 
+
 1.0.2.1
 -----
 * Usuniêto pobieranie œcie¿ki AQQ poprzez PID procesu (œcie¿ka jest zapisywana do pliku).

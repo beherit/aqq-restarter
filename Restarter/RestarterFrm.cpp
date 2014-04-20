@@ -86,7 +86,7 @@ void __fastcall TRestarterForm::FormShow(TObject *Sender)
      for (LONG y = 0; y < rRect.bottom; y += 5)
       SendMessage(hWnd,WM_MOUSEMOVE,0,(y << 16) + x);
     //W³aczenie AQQ
-    WinExec(AQQPath.c_str(), SW_SHOW);
+    ShellExecute(NULL, "open", AQQPath.c_str(), NULL, NULL, SW_SHOWNORMAL);
   }
   //Wy³¹czanie programu
   Close();
