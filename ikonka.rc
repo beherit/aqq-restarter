@@ -1,0 +1,3 @@
+#include "ikonka.rh"
+
+ID_PNG RCDATA "AQQRestarter.png"
