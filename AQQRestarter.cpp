@@ -59,6 +59,46 @@ void ExtractExe(unsigned short ID, AnsiString FileName)
 }
 //---------------------------------------------------------------------------
 
+int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
+{
+  //Katalog kompozycji
+  AnsiString Path = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,(WPARAM)(hInstance),0));
+  Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+
+  if(FileExists(Path + "\\\\Icons\\\\AQQRestarter.png"))
+  {
+    //Przypisanie ikony
+    wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\Icons\\\\AQQRestarter.png");
+    TPluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,(WPARAM)(plugin_icon_idx),(LPARAM)(plugin_icon_path));
+  }
+  else
+  {
+    //Katalog prywatny wtyczel
+    Path = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
+    Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+
+    if(!FileExists(Path + "\\\\AQQRestarter.png"))
+    {
+      //Wypakowanie ikon
+      ExtractExe(ID_PNG,Path + "\\\\AQQRestarter.png");
+      //Przypisanie ikony
+      wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\AQQRestarter.png");
+      TPluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,(WPARAM)(plugin_icon_idx),(LPARAM)(plugin_icon_path));
+      //Usuniecie ikony
+      DeleteFile(Path + "\\\\AQQRestarter.png");
+    }
+    else
+    {
+      //Przypisanie ikony
+      wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\AQQRestarter.png");
+      TPluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,(WPARAM)(plugin_icon_idx),(LPARAM)(plugin_icon_path));
+    }
+  }
+
+  return 0;
+}
+//---------------------------------------------------------------------------
+
 //Serwis restartu
 int __stdcall AqqReStartService (WPARAM, LPARAM)
 {
@@ -106,7 +146,7 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,4,0);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,4,1);
   TPluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
@@ -164,47 +204,48 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
   //Koniec
 
   //Katalog aktywnej kompozycji
-  AnsiString PluginPath = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,(WPARAM)(hInstance),0));
-  PluginPath = StringReplace(PluginPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+  AnsiString Path = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,(WPARAM)(hInstance),0));
+  Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
-  if(!FileExists(PluginPath + "\\\\Icons\\\\AQQRestarter.png"))
+  if(FileExists(Path + "\\\\Icons\\\\AQQRestarter.png"))
+  {
+    //Przypisanie ikony
+    wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\Icons\\\\AQQRestarter.png");
+    plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
+  }
+  else
   {
     //Katalog prywatny wtyczel
-    PluginPath = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
-    PluginPath = StringReplace(PluginPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+    Path = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
+    Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
-    if(!FileExists(PluginPath + "\\\\AQQRestarter.png"))
+    if(!FileExists(Path + "\\\\AQQRestarter.png"))
     {
       //Wypakowanie ikon
-      ExtractExe(ID_PNG,PluginPath + "\\\\AQQRestarter.png");
+      ExtractExe(ID_PNG,Path + "\\\\AQQRestarter.png");
       //Przypisanie ikony
-      wchar_t* plugin_icon_path = AnsiTowchar_t(PluginPath + "\\\\AQQRestarter.png");
+      wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\AQQRestarter.png");
       plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
       //Usuniecie ikony
-      DeleteFile("AQQRestarter.png");
+      DeleteFile(Path + "\\\\AQQRestarter.png");
     }
     else
     {
       //Przypisanie ikony
-      wchar_t* plugin_icon_path = AnsiTowchar_t(PluginPath + "\\\\AQQRestarter.png");
+      wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\AQQRestarter.png");
       plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
     }
   }
-  else
-  {
-    //Przypisanie ikony
-    wchar_t* plugin_icon_path = AnsiTowchar_t(PluginPath + "\\\\Icons\\\\AQQRestarter.png");
-    plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
-  }
 
-  if(FileExists(PluginPath + "\\\\Restarter.exe"))
-   DeleteFile("Restarter.exe");
+  Path = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
+  if(FileExists(Path + "\\\\Restarter.exe"))
+   DeleteFile(Path + "\\\\Restarter.exe");
 
   //Odczyt sciezki profilu
-  AnsiString UserPath = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETUSERDIR,(WPARAM)(hInstance),0));
-  UserPath = StringReplace(UserPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+  Path = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETUSERDIR,(WPARAM)(hInstance),0));
+  Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
   //Przywrocenie ustawien hasla
-  TIniFile *Ini = new TIniFile(UserPath + "\\\\Settings.ini");
+  TIniFile *Ini = new TIniFile(Path + "\\\\Settings.ini");
   bool AQQRestarter=Ini->ReadBool("Settings", "AQQRestarter", 0);
   if(AQQRestarter==1)
   {
@@ -221,9 +262,12 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
 
   //Utworzenie serwisu restartu
   TPluginLink.CreateServiceFunction(L"serwis_aqqrestart",AqqReStartService);
-  //Przypisanie skrutow
+  //Przypisanie skrotow
   PrzypiszSkrotMenu();
   PrzypiszSkrotMakra();
+
+  //Hook na zmianê kompozycji
+  TPluginLink.HookEvent(AQQ_SYSTEM_THEMECHANGED, OnThemeChanged);
 
   return 0;
 }
@@ -231,6 +275,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
 
 extern "C" int __declspec(dllexport) __stdcall Unload()
 {
+  TPluginLink.UnhookEvent(OnThemeChanged);
   TPluginLink.DestroyServiceFunction(AqqReStartService);
   TPluginLink.CallService(AQQ_ICONS_DESTROYPNGICON,0,(LPARAM)(plugin_icon_idx));
   TPluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&TPluginActionMenu));
