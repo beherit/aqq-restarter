@@ -61,6 +61,13 @@
 			<TASM_Debugging>None</TASM_Debugging>
 		</PropertyGroup>
 		<ItemGroup>
+			<CppCompile Include="AQQRestarter.cpp">
+				<BuildOrder>0</BuildOrder>
+			</CppCompile>
+			<RcItem Include="AQQRestarter.png">
+				<ResourceType>RCData</ResourceType>
+				<ResourceId>ID_PNG</ResourceId>
+			</RcItem>
 			<ResFiles Include="AQQRestarter.res">
 				<BuildOrder>3</BuildOrder>
 			</ResFiles>
@@ -68,13 +75,6 @@
 				<ContainerId>ResourceItem</ContainerId>
 				<ResourceType>RCData</ResourceType>
 				<ResourceId>ID_EXE</ResourceId>
-			</RcItem>
-			<CppCompile Include="AQQRestarter.cpp">
-				<BuildOrder>0</BuildOrder>
-			</CppCompile>
-			<RcItem Include="AQQRestarter.png">
-				<ResourceType>RCData</ResourceType>
-				<ResourceId>ID_PNG</ResourceId>
 			</RcItem>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
@@ -99,7 +99,7 @@
 						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
 						<VersionInfo Name="MajorVer">2</VersionInfo>
 						<VersionInfo Name="MinorVer">1</VersionInfo>
-						<VersionInfo Name="Release">1</VersionInfo>
+						<VersionInfo Name="Release">2</VersionInfo>
 						<VersionInfo Name="Build">0</VersionInfo>
 						<VersionInfo Name="Debug">False</VersionInfo>
 						<VersionInfo Name="PreRelease">False</VersionInfo>
@@ -112,7 +112,7 @@
 					<VersionInfoKeys>
 						<VersionInfoKeys Name="CompanyName">Krzysztof Grochocki (Beherit)</VersionInfoKeys>
 						<VersionInfoKeys Name="FileDescription"/>
-						<VersionInfoKeys Name="FileVersion">2.1.1.0</VersionInfoKeys>
+						<VersionInfoKeys Name="FileVersion">2.1.2.0</VersionInfoKeys>
 						<VersionInfoKeys Name="InternalName">AQQ Restarter</VersionInfoKeys>
 						<VersionInfoKeys Name="LegalCopyright">Krzysztof Grochocki (Beherit)</VersionInfoKeys>
 						<VersionInfoKeys Name="LegalTrademarks">Krzysztof Grochocki (Beherit)</VersionInfoKeys>

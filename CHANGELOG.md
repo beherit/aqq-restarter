@@ -1,3 +1,8 @@
+2.1.2.0
+-----
+* Poprawne ³adowanie ikony wtyczki do interfejsu komunikatora.
+* Poprawna zmiana ikony wtyczki po zmianie aktywnej kompozycji.
+
 2.1.1.0
 -----
 * Zmiany w pliku wspomagaj¹cym restart AQQ.
