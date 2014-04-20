@@ -53,7 +53,7 @@ void PrzypiszSkrotMenu()
   TPluginActionMenu.cbSize = sizeof(PluginAction);
   TPluginActionMenu.pszName = (wchar_t*)L"AQQRestarterPrzypiszSkrotMenu";
   TPluginActionMenu.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
-  TPluginActionMenu.Position = 12;
+  TPluginActionMenu.Position = 9;
   TPluginActionMenu.IconIndex = plugin_icon_idx;
   TPluginActionMenu.pszService = (wchar_t*) L"serwis_aqqrestart";
   TPluginActionMenu.pszPopupName = (wchar_t*) L"muProgram";
@@ -102,15 +102,26 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
 {
   TPluginLink = *Link;
 
-  //Wypakowanie ikon
-  ExtractExe(ID_PNG,"AQQRestarter.png");
+  //Katalog wtyczki
+  AnsiString PluginPath = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
+  PluginPath = StringReplace(PluginPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
-  //Przypisanie ikony
-  wchar_t* plugin_icon_path = L"AQQRestarter.png";
-  plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
-
-  //Usuniecie ikony
-  DeleteFile("AQQRestarter.png");
+  if(!FileExists(PluginPath + "\\\\AQQRestarter.png"))
+  {
+    //Wypakowanie ikon
+    ExtractExe(ID_PNG,"AQQRestarter.png");
+    //Przypisanie ikony
+    wchar_t* plugin_icon_path = L"AQQRestarter.png";
+    plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
+    //Usuniecie ikony
+    DeleteFile("AQQRestarter.png");
+  }
+  else
+  {
+    //Przypisanie ikony
+    wchar_t* plugin_icon_path = L"AQQRestarter.png";
+    plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
+  }
 
   PrzypiszSkrotMenu();
   PrzypiszSkrotMakra();
