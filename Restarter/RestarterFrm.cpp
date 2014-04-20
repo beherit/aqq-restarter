@@ -4,6 +4,7 @@
 #include "RestarterFrm.h"
 #include <inifiles.hpp>
 #include <tlhelp32.h>
+#include <Registry.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -58,11 +59,17 @@ void __fastcall TRestarterForm::FormShow(TObject *Sender)
   //Odczyt PID
   TIniFile *Ini = new TIniFile(ExtractFilePath(Application->ExeName) + "\\\\Restarter.ini");
   int PID = Ini->ReadInteger("Restarter", "AQQPid", 0);
+  AnsiString AQQPath = Ini->ReadString("Restarter", "AQQPath", "");
+  AQQPath=StringReplace(AQQPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
   delete Ini;
   if(PID!=0)
   {
-    //Pobieranie sciezki AQQ
-    AnsiString AQQPath = GetPathOfProces(PID);
+    if(AQQPath=="")
+    {
+      //Pobieranie sciezki AQQ przez PID
+      AnsiString AQQPath = GetPathOfProces(PID);
+      AQQPath=StringReplace(AQQPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+    }
     //Restartowanie AQQ
     CloseProcess(PID);
     //Usuwanie pliku INI

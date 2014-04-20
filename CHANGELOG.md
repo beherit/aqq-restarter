@@ -1,3 +1,7 @@
+1.0.2.1
+-----
+* Usuniêto pobieranie œcie¿ki AQQ poprzez PID procesu (œcie¿ka jest zapisywana do pliku).
+
 1.0.2.0
 -----
 * Zmieniono ca³kowicie sposób restartu - teraz okno logowania nie ma prawa siê pokazaæ.

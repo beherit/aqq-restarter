@@ -63,11 +63,12 @@ int __stdcall AqqReStartService (WPARAM, LPARAM)
   //Odczyt sciezki prywatnego profilu wtyczek
   AnsiString PluginPath = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
   PluginPath = StringReplace(PluginPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
-  //Odczyt PID AQQ
+  //Odczyt PID AQQ  
   int PID = getpid();
   //Zapis PID do pliku
   TIniFile *Ini = new TIniFile(PluginPath + "\\\\Restarter.ini");
   Ini->WriteInteger("Restarter", "AQQPid", PID);
+  Ini->WriteString("Restarter", "AQQPath", Application->ExeName);
   delete Ini;
   //Wypakowanie programu do restartowania AQQ
   PluginPath = PluginPath + "\\\\Restarter.exe";
@@ -84,7 +85,7 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,2,0);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,2,1);
   TPluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
