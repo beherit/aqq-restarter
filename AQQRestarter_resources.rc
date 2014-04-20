@@ -1,2 +1,2 @@
-ICON DATA "AQQRestarter.png"
-RESTARTER DATA "Restarter\\Restarter.exe"
+SHARED DATA "Data\\AQQRestarter.dll.png"
+FASTACCESS DATA "Data\\FastAccess.png"

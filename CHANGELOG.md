@@ -1,3 +1,11 @@
+2.3.1.0
+-----
+* Wtyczka posiada w³asn¹ ikonê pokazywan¹ w ustawieniach komunikatora na liœcie wtyczek.
+* Usuniêcie pliku wspomagaj¹cego restart.
+* Usuniêcie notyfikacji AQQRESTARTER_SYSTEM_RESTARTING.
+* Zmniejszenie rozmiaru wtyczki 32-bitowej poprzez u¿ycie kompresji LZMA.
+* Brak kompresji wtyczki 64-bitowej.
+
 2.3.0.0
 -----
 * Dodanie 64-bitowej wersji wtyczki.
