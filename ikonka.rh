@@ -1,0 +1,5 @@
+#ifndef IKONKA_RH
+#define IKONKA_RH
+
+#define ID_PNG 1000
+#endif

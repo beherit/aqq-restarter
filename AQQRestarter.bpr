@@ -5,7 +5,7 @@
     <VERSION value="BCB.06.00"/>
     <PROJECT value="AQQRestarter.dll"/>
     <OBJFILES value="AQQRestarter.obj"/>
-    <RESFILES value="AQQRestarter.res"/>
+    <RESFILES value="AQQRestarter.res ikonka.res"/>
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES)"/>
     <LIBFILES value=""/>
@@ -46,6 +46,7 @@
       <FILE FILENAME="AQQRestarter.res" FORMNAME="" UNITNAME="AQQRestarter.res" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AQQRestarter.bpf" FORMNAME="" UNITNAME="AQQRestarter" CONTAINERID="BPF" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AQQRestarter.cpp" FORMNAME="" UNITNAME="AQQRestarter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="ikonka.RES" FORMNAME="" UNITNAME="ikonka.RES" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
@@ -56,7 +57,7 @@ IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=0
 MinorVer=0
-Release=1
+Release=2
 Build=0
 Debug=0
 PreRelease=0
@@ -69,13 +70,13 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=Krzysztof Grochocki [Beherit]
 FileDescription=
-FileVersion=0.0.1.0
+FileVersion=0.0.2.0
 InternalName=AQQRestarter
 LegalCopyright=Krzysztof Grochocki (c) 2008
 LegalTrademarks=Krzysztof Grochocki (c) 2008
 OriginalFilename=AQQRestarter.dll
 ProductName=AQQRestarter
-ProductVersion=0.0.1.0
+ProductVersion=0.0.2.0
 Comments=Restarter AQQ
 
 [HistoryLists\hlIncludePath]
