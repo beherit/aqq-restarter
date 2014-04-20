@@ -1,3 +1,7 @@
+1.0.2.0
+-----
+* Zmieniono ca³kowicie sposób restartu - teraz okno logowania nie ma prawa siê pokazaæ.
+
 1.0.1.2
 -----
 * Przywrócenie starej pozycji elementu w menu Program (z wersji 1.0.0.0).
