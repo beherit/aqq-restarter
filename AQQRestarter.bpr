@@ -9,8 +9,8 @@
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES)"/>
     <LIBFILES value=""/>
-    <LIBRARIES value="rtl.lib"/>
-    <SPARELIBS value="rtl.lib"/>
+    <LIBRARIES value="VCL.lib rtl.lib"/>
+    <SPARELIBS value="rtl.lib VCL.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi vclx.bpi bcbsmp.bpi dclocx.bpi"/>
     <PATHCPP value=".;"/>
     <PATHPAS value=".;"/>
@@ -55,10 +55,10 @@
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=0
-MajorVer=0
+MajorVer=1
 MinorVer=0
-Release=4
-Build=4
+Release=0
+Build=0
 Debug=0
 PreRelease=0
 Special=0
@@ -70,17 +70,14 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=Krzysztof Grochocki (Beherit)
 FileDescription=
-FileVersion=0.0.4.4
+FileVersion=1.0.0.0
 InternalName=AQQ Restarter
 LegalCopyright=Krzysztof Grochocki (Beherit)
 LegalTrademarks=Krzysztof Grochocki (Beherit)
 OriginalFilename=AQQRestarter.dll
 ProductName=AQQ Restarter
-ProductVersion=0.0.4.4
+ProductVersion=1.0.0.0
 Comments=Restarter AQQ
-
-[Excluded Packages]
-C:\Program Files\ZipForge\Lib\C++ Builder 6\dclZipForgeb6.bpl=ZipForge Package
 
 [HistoryLists\hlIncludePath]
 Count=2
@@ -88,17 +85,20 @@ Item0=$(BCB)\include;$(BCB)\include\vcl
 Item1=D:\Borland - moje projkety\AQQRestarter;$(BCB)\include;$(BCB)\include\vcl
 
 [HistoryLists\hlLibraryPath]
-Count=2
+Count=4
 Item0=$(BCB)\lib\obj;$(BCB)\lib
-Item1=D:\Borland - moje projkety\AQQRestarter;$(BCB)\lib\obj;$(BCB)\lib
+Item1=$(BCB)\lib\obj;$(BCB)\lib;$(BCB)\lib\debug
+Item2=$(BCB)\lib\obj;$(BCB)\lib;$(BCB)\Debug
+Item3=D:\Borland - moje projkety\AQQRestarter;$(BCB)\lib\obj;$(BCB)\lib
 
 [HistoryLists\hlDebugSourcePath]
 Count=1
 Item0=$(BCB)\source\vcl
 
 [HistoryLists\hlConditionals]
-Count=1
+Count=2
 Item0=_DEBUG
+Item1=_DEBUG;NO_WIN32_LEAN_AND_MEAN
 
 [Debugging]
 DebugSourceDirs=$(BCB)\source\vcl

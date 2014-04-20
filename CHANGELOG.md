@@ -1,4 +1,8 @@
-0.0.4.2
+1.0.0.0
+-----
+* Zmiana sposobu restartowania (taka jak we wtyczce MD kameroka).
+
+0.0.4.4
 -----
 * Poprawiono b³¹d przy wy³adowywaniu wtyczki oraz bug z elementem w tray’u.
 
