@@ -66,7 +66,7 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(0,0,4,2);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(0,0,4,4);
   TPluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
@@ -79,6 +79,7 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 void PrzypiszSkrotMenu()
 {
   TPluginActionMenu.cbSize = sizeof(PluginAction);
+  TPluginActionMenu.pszName = (wchar_t*)L"AQQRestarterPrzypiszSkrotMenu";
   TPluginActionMenu.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
   TPluginActionMenu.Position = 12;
   TPluginActionMenu.IconIndex = plugin_icon_idx;
@@ -92,6 +93,7 @@ void PrzypiszSkrotMenu()
 void PrzypiszSkrotMakra()
 {
   TPluginActionMakra.cbSize = sizeof(PluginAction);
+  TPluginActionMakra.pszName = (wchar_t*)L"AQQRestarterPrzypiszSkrotMakra";
   TPluginActionMakra.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
   TPluginActionMakra.Position = 14;
   TPluginActionMakra.IconIndex = plugin_icon_idx;

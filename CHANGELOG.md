@@ -1,5 +1,9 @@
 0.0.4.2
 -----
+* Poprawiono b³¹d przy wy³adowywaniu wtyczki oraz bug z elementem w tray’u.
+
+0.0.4.2
+-----
 * Brak ekranu logowania po restarcie.
 
 0.0.4.0
