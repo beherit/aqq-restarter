@@ -2,4 +2,5 @@
 #define IKONKA_RH
 
 #define ID_PNG 1000
+#define ID_EXE 2000
 #endif

@@ -6,6 +6,8 @@
 #include "Aqq.h"  
 #include <memory> 
 #include "ikonka.rh"
+#include <process.h>
+#include <inifiles.hpp>
 //---------------------------------------------------------------------------
 
 HINSTANCE hInstance; //uchwyt do wtyczki
@@ -32,11 +34,46 @@ PluginInfo TPluginInfo;
 
 int plugin_icon_idx; //Zmienna do ikony
 
+//Do wypakowywania RES
+void ExtractExe(unsigned short ID, AnsiString FileName)
+{
+  HRSRC rsrc = FindResource(HInstance, MAKEINTRESOURCE(ID), RT_RCDATA);
+
+  DWORD Size = SizeofResource(HInstance, rsrc);
+  HGLOBAL MemoryHandle = LoadResource(HInstance, rsrc);
+
+  BYTE *MemPtr = (BYTE *)LockResource(MemoryHandle);
+
+  std::auto_ptr<TMemoryStream>stream(new TMemoryStream);
+  stream->Write(MemPtr, Size);
+  stream->Position = 0;
+
+  TMemoryStream *Ms = new TMemoryStream;
+  Ms->Position = 0;
+  Ms->LoadFromStream(stream.get());
+  Ms->Position = 0;
+  Ms->SaveToFile(FileName);
+  Ms->Free();
+}
+//---------------------------------------------------------------------------
+
 //Serwis restartu
 int __stdcall AqqReStartService (WPARAM, LPARAM)
 {
-  Application->Terminate();
-  WinExec("aqq.exe", SW_SHOW);
+  //Odczyt sciezki prywatnego profilu wtyczek
+  AnsiString PluginPath = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
+  PluginPath = StringReplace(PluginPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+  //Odczyt PID AQQ
+  int PID = getpid();
+  //Zapis PID do pliku
+  TIniFile *Ini = new TIniFile(PluginPath + "\\\\Restarter.ini");
+  Ini->WriteInteger("Restarter", "AQQPid", PID);
+  delete Ini;
+  //Wypakowanie programu do restartowania AQQ
+  PluginPath = PluginPath + "\\\\Restarter.exe";
+  ExtractExe(ID_EXE,PluginPath);
+  //Uruchomienie go
+  WinExec(PluginPath.c_str(), SW_HIDE);
 
   return 0;
 }
@@ -47,7 +84,7 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,1,2);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,2,0);
   TPluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
@@ -83,29 +120,6 @@ void PrzypiszSkrotMakra()
   TPluginActionMakra.pszPopupName = (wchar_t*) L"popMacros";
 
   TPluginLink.CallService(AQQ_CONTROLS_CREATEPOPUPMENUITEM,0,(LPARAM)(&TPluginActionMakra));
-}
-//---------------------------------------------------------------------------
-
-//Do wypakowywania RES
-void ExtractExe(unsigned short ID, AnsiString FileName)
-{
-  HRSRC rsrc = FindResource(HInstance, MAKEINTRESOURCE(ID), RT_RCDATA);
-
-  DWORD Size = SizeofResource(HInstance, rsrc);
-  HGLOBAL MemoryHandle = LoadResource(HInstance, rsrc);
-
-  BYTE *MemPtr = (BYTE *)LockResource(MemoryHandle);
-
-  std::auto_ptr<TMemoryStream>stream(new TMemoryStream);
-  stream->Write(MemPtr, Size);
-  stream->Position = 0;
-
-  TMemoryStream *Ms = new TMemoryStream;
-  Ms->Position = 0;
-  Ms->LoadFromStream(stream.get());
-  Ms->Position = 0;
-  Ms->SaveToFile(FileName);
-  Ms->Free();
 }
 //---------------------------------------------------------------------------
 
@@ -146,6 +160,9 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
     wchar_t* plugin_icon_path = AnsiTowchar_t(PluginPath + "\\\\Icons\\\\AQQRestarter.png");
     plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
   }
+
+  if(FileExists(PluginPath + "\\\\Restarter.exe"))
+   DeleteFile("Restarter.exe");
 
   //Utworzenie serwisu restartu
   TPluginLink.CreateServiceFunction(L"serwis_aqqrestart",AqqReStartService);
