@@ -1,3 +1,7 @@
+2.0.3.0
+-----
+* Inteligentne ustalanie pozycji elementu w g³ównym menu AQQ.
+
 2.0.2.0
 -----
 * Przepisanie wtyczki pod kompilator CodeGear C++ Builder 2010.
