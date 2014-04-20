@@ -1,38 +1,18 @@
 //---------------------------------------------------------------------------
 #include <vcl.h>
 #include <windows.h>
-#pragma hdrstop    
+#pragma hdrstop
 #pragma argsused
 #include "Aqq.h"
-#include <memory> 
-#include "Files.rh"
-//#include <process.h>
+#include <process.h>
 #include <inifiles.hpp>
 //---------------------------------------------------------------------------
 
-HINSTANCE hInstance; //uchwyt do wtyczki
-
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
 {
-  hInstance = hinst;
   return 1;
 }
 //---------------------------------------------------------------------------
-
-//zamiana AnsiString->wchar_t*
-wchar_t* AnsiTowchar_t(AnsiString Str)
-{                                 
-  const char* Text = Str.c_str();
-  int size = MultiByteToWideChar(GetACP(), 0, Text, -1, 0,0);
-  wchar_t* wbuffer = new wchar_t[size+1];
-
-  MultiByteToWideChar(GetACP(), 0, Text, -1, wbuffer, size+1);
-
-  return wbuffer;
-}
-//---------------------------------------------------------------------------
-
-bool Polish; //Do lokalizacji
 
 //Utworzenie obiektow do struktur
 TPluginAction PluginActionMenu;
@@ -41,64 +21,55 @@ TPluginLink PluginLink;
 TPluginInfo PluginInfo;
 
 int plugin_icon_idx; //Zmienna do ikony
+bool Polish; //Do lokalizacji
+UnicodeString Path;
 
-//Do wypakowywania RES
-void ExtractExe(unsigned short ID, AnsiString FileName)
+//Zapisywanie zasobów
+bool SaveResourceToFile(char *FileName, char *res)
 {
-  HRSRC rsrc = FindResource(HInstance, MAKEINTRESOURCE(ID), RT_RCDATA);
-
-  DWORD Size = SizeofResource(HInstance, rsrc);
-  HGLOBAL MemoryHandle = LoadResource(HInstance, rsrc);
-
-  BYTE *MemPtr = (BYTE *)LockResource(MemoryHandle);
-
-  std::auto_ptr<TMemoryStream>stream(new TMemoryStream);
-  stream->Write(MemPtr, Size);
-  stream->Position = 0;
-
-  TMemoryStream *Ms = new TMemoryStream;
-
-  Ms->Position = 0;
-  Ms->LoadFromStream(stream.get());
-  Ms->Position = 0;
-  Ms->SaveToFile(FileName);
-  Ms->Free();
+  HRSRC hrsrc = FindResource(HInstance, res, RT_RCDATA);
+  if(hrsrc == NULL) return false;
+  DWORD size = SizeofResource(HInstance, hrsrc);
+  HGLOBAL hglob = LoadResource(HInstance, hrsrc);
+  LPVOID rdata = LockResource(hglob);
+  HANDLE hFile = CreateFile(FileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+  DWORD writ;
+  WriteFile(hFile, rdata, size, &writ, NULL);
+  CloseHandle(hFile);
+  return true;
 }
 //---------------------------------------------------------------------------
 
 int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 {
   //Katalog kompozycji
-  AnsiString Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,(WPARAM)(hInstance),0));
+  Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,(WPARAM)(HInstance),0));
   Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
   if(FileExists(Path + "\\\\Icons\\\\AQQRestarter.png"))
   {
-    //Przypisanie ikony
-    wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\Icons\\\\AQQRestarter.png");
-    PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,(WPARAM)(plugin_icon_idx),(LPARAM)(plugin_icon_path));
+	//Przypisanie ikony
+	PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,(WPARAM)(plugin_icon_idx),(LPARAM)((Path + "\\\\Icons\\\\AQQRestarter.png").w_str()));
   }
   else
   {
-    //Katalog prywatny wtyczel
-    Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
+	//Katalog prywatny wtyczel
+	Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(HInstance),0));
     Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
     if(!FileExists(Path + "\\\\AQQRestarter.png"))
     {
-      //Wypakowanie ikon
-      ExtractExe(ID_PNG,Path + "\\\\AQQRestarter.png");
-      //Przypisanie ikony
-      wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\AQQRestarter.png");
-      PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,(WPARAM)(plugin_icon_idx),(LPARAM)(plugin_icon_path));
+	  //Wypakowanie ikon
+	  SaveResourceToFile((Path + "\\\\AQQRestarter.png").c_str(),"ID_PNG");
+	  //Przypisanie ikony
+	  PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,(WPARAM)(plugin_icon_idx),(LPARAM)((Path + "\\\\AQQRestarter.png").w_str()));
       //Usuniecie ikony
       DeleteFile(Path + "\\\\AQQRestarter.png");
     }
     else
     {
-      //Przypisanie ikony
-      wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\AQQRestarter.png");
-      PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,(WPARAM)(plugin_icon_idx),(LPARAM)(plugin_icon_path));
+	  //Przypisanie ikony
+	  PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,(WPARAM)(plugin_icon_idx),(LPARAM)((Path + "\\\\AQQRestarter.png").w_str()));
     }
   }
 
@@ -110,21 +81,23 @@ int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 int __stdcall AqqReStartService (WPARAM, LPARAM)
 {
   //Odczyt sciezki prywatnego profilu wtyczek
-  AnsiString PluginPath = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
-  PluginPath = StringReplace(PluginPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+  Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(HInstance),0));
+  Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
   //Zapis sciezki AQQ, has³a oraz nazwy profilu do pliku
-  TIniFile *Ini = new TIniFile(PluginPath + "\\\\AQQRestarter.ini");
+  TIniFile *Ini = new TIniFile(Path + "\\\\AQQRestarter.ini");
   Ini->WriteString("Restarter", "AQQPath", (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETAPPFILEPATH,0,0)));
   //Odczyt has³a profilu
-  AnsiString Password = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
+  UnicodeString Password = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
   int x = AnsiPos("ProfilePass=",Password);
   Password.Delete(1,x+11);
   x = AnsiPos("\n",Password);
   Password.Delete(x,Password.Length());
   Ini->WriteString("Restarter", "Password", Password);
+  //Odczyt PID procesu AQQ
+  Ini->WriteString("Restarter", "PID", getpid());
   //Odczyt nazwy profilu
-  //AnsiString ProfileName = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETUSERDIR,(WPARAM)(hInstance),0));
+  //AnsiString ProfileName = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETUSERDIR,(WPARAM)(HInstance),0));
   //x = ProfileName.LastDelimiter("\\");
   //ProfileName.Delete(1,x);
   //ProfileName=ProfileName.Trim();
@@ -132,10 +105,10 @@ int __stdcall AqqReStartService (WPARAM, LPARAM)
   delete Ini;
 
   //Wypakowanie programu do restartowania AQQ
-  PluginPath = PluginPath + "\\\\Restarter.exe";
-  ExtractExe(ID_EXE,PluginPath);
+  Path = Path + "\\\\Restarter.exe";
+  SaveResourceToFile(Path.c_str(),"ID_EXE");
   //Uruchomienie go
-  ShellExecute(NULL, "open", PluginPath.c_str(), NULL, NULL, SW_SHOWMINIMIZED);
+  ShellExecute(NULL, "open", Path.c_str(), NULL, NULL, SW_NORMAL);
   //Zamkniêcie AQQ
   PluginLink.CallService(AQQ_SYSTEM_RUNACTION,0,(LPARAM)(L"aExit"));
 
@@ -148,15 +121,15 @@ extern "C"  __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQV
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,4,2);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,0,0);
   PluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   PluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
-  PluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
+  PluginInfo.AuthorMail = (wchar_t *)L"sirbeherit@gmail.com";
   PluginInfo.Copyright = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
-  PluginInfo.Homepage = (wchar_t *)L"";
+  PluginInfo.Homepage = (wchar_t *)L"http://beherit.pl";
 
   return &PluginInfo;
-}              
+}
 //---------------------------------------------------------------------------
 
 void PrzypiszSkrotMenu()
@@ -198,7 +171,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
   PluginLink = *Link;
 
   //Rozpoznanie lokalizacji
-  AnsiString Lang = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETLANGSTR,0,(LPARAM)(L"Password")));
+  UnicodeString Lang = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETLANGSTR,0,(LPARAM)(L"Password")));
   if(Lang=="Has³o")
    Polish=1;
   else
@@ -206,40 +179,37 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
   //Koniec
 
   //Katalog aktywnej kompozycji
-  AnsiString Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,(WPARAM)(hInstance),0));
+  Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,(WPARAM)(HInstance),0));
   Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
   if(FileExists(Path + "\\\\Icons\\\\AQQRestarter.png"))
   {
-    //Przypisanie ikony
-    wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\Icons\\\\AQQRestarter.png");
-    plugin_icon_idx=PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
+	//Przypisanie ikony
+	plugin_icon_idx=PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)((Path + "\\\\Icons\\\\AQQRestarter.png").w_str()));
   }
   else
   {
     //Katalog prywatny wtyczel
-    Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
-    Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+	Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(HInstance),0));
+	Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
-    if(!FileExists(Path + "\\\\AQQRestarter.png"))
-    {
-      //Wypakowanie ikon
-      ExtractExe(ID_PNG,Path + "\\\\AQQRestarter.png");
-      //Przypisanie ikony
-      wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\AQQRestarter.png");
-      plugin_icon_idx=PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
+	if(!FileExists(Path + "\\\\AQQRestarter.png"))
+	{
+	  //Wypakowanie ikon
+	  SaveResourceToFile((Path + "\\\\AQQRestarter.png").c_str(),"ID_PNG");
+	  //Przypisanie ikony
+	  plugin_icon_idx=PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)((Path + "\\\\AQQRestarter.png").w_str()));
       //Usuniecie ikony
       DeleteFile(Path + "\\\\AQQRestarter.png");
     }
     else
     {
-      //Przypisanie ikony
-      wchar_t* plugin_icon_path = AnsiTowchar_t(Path + "\\\\AQQRestarter.png");
-      plugin_icon_idx=PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
+	  //Przypisanie ikony
+	  plugin_icon_idx=PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)((Path + "\\\\AQQRestarter.png").w_str()));
     }
   }
 
-  Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
+  Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(HInstance),0));
   if(FileExists(Path + "\\\\Restarter.exe"))
    DeleteFile(Path + "\\\\Restarter.exe");
 
@@ -267,3 +237,4 @@ extern "C" int __declspec(dllexport) __stdcall Unload()
   return 0;
 }
 //---------------------------------------------------------------------------
+
