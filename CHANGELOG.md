@@ -1,3 +1,7 @@
+2.2.0.0
+-----
+* Przepisanie wtyczki pod kompilator Embarcadero C++ Builder XE3.
+
 2.1.3.0
 -----
 * Wykonywanie akcji za u¿ytkownika przez plik wspomagaj¹cy restart dopiero po faktycznym pokazaniu siê okna logowania.
