@@ -1,3 +1,8 @@
+2.0.1.0
+-----
+* Ukrywanie okna logowania i chmurki informacyjnej poprzez WinAPI.
+* Wtyczka zamyka AQQ i uruchamia je ponownie poprzez funkcjê z SDK AQQ.
+
 2.0.0.0
 -----
 * Przepisanie wtyczki pod kompilator CodeGear C++ Builder 2009.
