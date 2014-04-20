@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{8BD687DE-53F4-483F-ABB8-CD53EA689F27}</ProjectGuid>
-        <ProjectVersion>14.4</ProjectVersion>
+        <ProjectVersion>15.1</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
@@ -57,16 +57,15 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <VerInfo_Release>1</VerInfo_Release>
         <DCC_MaxStackSize>2097152</DCC_MaxStackSize>
         <ILINK_StackReserveSize>0x00200000</ILINK_StackReserveSize>
         <BCC_AutoDepCheck>false</BCC_AutoDepCheck>
         <DCC_DebugInformation>false</DCC_DebugInformation>
         <ShowGeneralMessages>true</ShowGeneralMessages>
-        <VerInfo_MinorVer>3</VerInfo_MinorVer>
+        <VerInfo_MinorVer>4</VerInfo_MinorVer>
         <ProjectType>VCppStyleDll</ProjectType>
         <_TCHARMapping>wchar_t</_TCHARMapping>
-        <VerInfo_Keys>FileVersion=2.3.1.0;InternalName=;LegalCopyright=Krzysztof Grochocki (Beherit);LegalTrademarks=;OriginalFilename=;ProductName=AQQ Restarter;ProductVersion=2.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=2.4.0.0;LegalCopyright=Krzysztof Grochocki;ProductName=AQQ Restarter;ProductVersion=2.0.0.0;CompanyName=Beherit Development;LegalTrademarks=Krzysztof Grochocki</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <Multithreaded>true</Multithreaded>
@@ -119,6 +118,9 @@
         <Defines>_DEBUG;$(Defines)</Defines>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <VerInfo_MinorVer>4</VerInfo_MinorVer>
+        <VerInfo_Release>0</VerInfo_Release>
+        <VerInfo_Keys>FileVersion=2.4.0.0;LegalCopyright=Krzysztof Grochocki;ProductName=AQQ Restarter;ProductVersion=2.0.0.0;CompanyName=Beherit Development;LegalTrademarks=Krzysztof Grochocki</VerInfo_Keys>
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">

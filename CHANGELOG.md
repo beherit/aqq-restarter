@@ -1,17 +1,24 @@
+2.4.0.0
+-----
+* Drobna optymalizacja kodu.
+* Kompilacja pod poprawionymi nag≈Ç√≥wkami dla wersji 64-bitowej.
+* Zmniejszenie rozmiaru wtyczki 64-bitowej poprzez u≈ºycie kompresji LZMA.
+* Usuniƒôcie funkcji AQQRESTARTER_SYSTEM_RESTART.
+
 2.3.1.0
 -----
-* Wtyczka posiada w≥asnπ ikonÍ pokazywanπ w ustawieniach komunikatora na liúcie wtyczek.
-* UsuniÍcie pliku wspomagajπcego restart.
-* UsuniÍcie notyfikacji AQQRESTARTER_SYSTEM_RESTARTING.
-* Zmniejszenie rozmiaru wtyczki 32-bitowej poprzez uøycie kompresji LZMA.
+* Wtyczka posiada w≈ÇasnƒÖ ikonƒô pokazywanƒÖ w ustawieniach komunikatora na li≈õcie wtyczek.
+* Usuniƒôcie pliku wspomagajƒÖcego restart.
+* Usuniƒôcie notyfikacji AQQRESTARTER_SYSTEM_RESTARTING.
+* Zmniejszenie rozmiaru wtyczki 32-bitowej poprzez u≈ºycie kompresji LZMA.
 * Brak kompresji wtyczki 64-bitowej.
 
 2.3.0.0
 -----
 * Dodanie 64-bitowej wersji wtyczki.
-* Autologowanie na profile niezabezpieczone has≥em bez opcji autologowania.
-* Zmiany w pliku wspomagajπcym restart.
-* Inne mniej waøne zmiany w kodzie wtyczki.
+* Autologowanie na profile niezabezpieczone has≈Çem bez opcji autologowania.
+* Zmiany w pliku wspomagajƒÖcym restart.
+* Inne mniej wa≈ºne zmiany w kodzie wtyczki.
 
 2.2.0.0
 -----
@@ -19,52 +26,52 @@
 
 2.1.3.0
 -----
-* Wykonywanie akcji za uøytkownika przez plik wspomagajπcy restart dopiero po faktycznym pokazaniu siÍ okna logowania.
-* Plik wspomagajπcym restart nie ukrywa juø okna logowania.
-* Niewpisywanie has≥a do profilu, gdy nie jest on zabezpieczony.
+* Wykonywanie akcji za u≈ºytkownika przez plik wspomagajƒÖcy restart dopiero po faktycznym pokazaniu siƒô okna logowania.
+* Plik wspomagajƒÖcym restart nie ukrywa ju≈º okna logowania.
+* Niewpisywanie has≈Ça do profilu, gdy nie jest on zabezpieczony.
 
 2.1.2.0
 -----
-* Poprawne ≥adowanie ikony wtyczki do interfejsu komunikatora.
+* Poprawne ≈Çadowanie ikony wtyczki do interfejsu komunikatora.
 * Poprawna zmiana ikony wtyczki po zmianie aktywnej kompozycji.
 
 2.1.1.0
 -----
-* Zmiany w pliku wspomagajπcym restart AQQ.
+* Zmiany w pliku wspomagajƒÖcym restart AQQ.
 * Optymalizacja kodu.
 
 2.1.0.0
 -----
-* Zmiany w pliku wspomagajπcym restart AQQ.
+* Zmiany w pliku wspomagajƒÖcym restart AQQ.
 
 2.0.4.0
 -----
-* Poprawne usuwanie pliku wspomagajπcego restart AQQ.
-* Dodano notyfikacjÍ AQQRESTARTER_SYSTEM_RESTARTING wywo≥ywanπ przed restartem AQQ.
+* Poprawne usuwanie pliku wspomagajƒÖcego restart AQQ.
+* Dodano notyfikacjƒô AQQRESTARTER_SYSTEM_RESTARTING wywo≈ÇywanƒÖ przed restartem AQQ.
 
 2.0.3.0
 -----
-* Inteligentne ustalanie pozycji elementu w g≥Ûwnym menu AQQ.
+* Inteligentne ustalanie pozycji elementu w g≈Ç√≥wnym menu AQQ.
 
 2.0.2.0
 -----
 * Przepisanie wtyczki pod kompilator CodeGear C++ Builder 2010.
-* SDK: Dodano funkcjÍ AQQRESTARTER_SYSTEM_RESTART = "AQQRestarter/System/Restart".
+* SDK: Dodano funkcjƒô AQQRESTARTER_SYSTEM_RESTART = "AQQRestarter/System/Restart".
 
 2.0.1.0
 -----
 * Ukrywanie okna logowania i chmurki informacyjnej poprzez WinAPI.
-* Wtyczka zamyka AQQ i uruchamia je ponownie poprzez funkcjÍ z SDK AQQ.
+* Wtyczka zamyka AQQ i uruchamia je ponownie poprzez funkcjƒô z SDK AQQ.
 
 2.0.0.0
 -----
 * Przepisanie wtyczki pod kompilator CodeGear C++ Builder 2009.
-* Nowa instancja AQQ jest uruchamiana dopiero wtedy gdy poprzednia zostanie zamkniÍta.
+* Nowa instancja AQQ jest uruchamiana dopiero wtedy gdy poprzednia zostanie zamkniƒôta.
 
 1.0.4.2
 -----
-* Poprawiono drobny wyciek pamiÍci.
-* Proces AQQ nie jest juø killowany (zapobiega to niezapisywaniu ustawieÒ AQQ).
+* Poprawiono drobny wyciek pamiƒôci.
+* Proces AQQ nie jest ju≈º killowany (zapobiega to niezapisywaniu ustawie≈Ñ AQQ).
 * Zmieniono tryb uruchamiania ponownie AQQ.
 
 1.0.4.1
@@ -74,7 +81,7 @@
 
 1.0.4.0
 -----
-* Ewidentny brak okna logowania nawet przy profilu zabezpieczonym na has≥o.
+* Ewidentny brak okna logowania nawet przy profilu zabezpieczonym na has≈Ço.
 
 1.0.3.0
 -----
@@ -82,26 +89,26 @@
 
 1.0.2.2
 -----
-* Ma≥a poprawka w kodzie wtyczki. 
+* Ma≈Ça poprawka w kodzie wtyczki. 
 
 1.0.2.1
 -----
-* UsuniÍto pobieranie úcieøki AQQ poprzez PID procesu (úcieøka jest zapisywana do pliku).
+* Usuniƒôto pobieranie ≈õcie≈ºki AQQ poprzez PID procesu (≈õcie≈ºka jest zapisywana do pliku).
 
 1.0.2.0
 -----
-* Zmieniono ca≥kowicie sposÛb restartu - teraz okno logowania nie ma prawa siÍ pokazaÊ.
+* Zmieniono ca≈Çkowicie spos√≥b restartu - teraz okno logowania nie ma prawa siƒô pokazaƒá.
 
 1.0.1.2
 -----
-* PrzywrÛcenie starej pozycji elementu w menu Program (z wersji 1.0.0.0).
-* Ma≥e poprawki w kodzie.
-* Wtyczka sprawdza przy ≥adowaniu czy w katalogu aktywnej kompozycji w folderze Icons znajduje siÍ plik "AQQRestarter.png", jeøeli tak ustawia go jako grafikÍ przycisku.
+* Przywr√≥cenie starej pozycji elementu w menu Program (z wersji 1.0.0.0).
+* Ma≈Çe poprawki w kodzie.
+* Wtyczka sprawdza przy ≈Çadowaniu czy w katalogu aktywnej kompozycji w folderze Icons znajduje siƒô plik "AQQRestarter.png", je≈ºeli tak ustawia go jako grafikƒô przycisku.
 
 1.0.1.0
 -----
 * Przystosowanie pozycji ikonki do wersji AQQ 2.0.5.15+.
-* Wtyczka sprawdza czy w katalogu prywatnym wtyczek jest plik "AQQRestarter.png", jeøeli tak ustawia go jako grafikÍ przycisku.
+* Wtyczka sprawdza czy w katalogu prywatnym wtyczek jest plik "AQQRestarter.png", je≈ºeli tak ustawia go jako grafikƒô przycisku.
 
 1.0.0.0
 -----
@@ -109,7 +116,7 @@
 
 0.0.4.4
 -----
-* Poprawiono b≥πd przy wy≥adowywaniu wtyczki oraz bug z elementem w trayíu.
+* Poprawiono b≈ÇƒÖd przy wy≈Çadowywaniu wtyczki oraz bug z elementem w tray‚Äôu.
 
 0.0.4.2
 -----
@@ -117,8 +124,8 @@
 
 0.0.4.0
 -----
-* Zmienienie sposobu restartu AQQ! Od teraz juø nie zostaje ikonka w trayíu.
-* Zmiana nazwy wtyczki na ìAQQ Restarterî.
+* Zmienienie sposobu restartu AQQ! Od teraz ju≈º nie zostaje ikonka w tray‚Äôu.
+* Zmiana nazwy wtyczki na ‚ÄúAQQ Restarter‚Äù.
 
 0.0.3.0
 -----
@@ -126,7 +133,7 @@
 
 0.0.2.0
 -----
-* Dodanie w≥asnej ikonki dla tworzonego elementu w AQQ.
+* Dodanie w≈Çasnej ikonki dla tworzonego elementu w AQQ.
 
 0.0.1.0
 -----

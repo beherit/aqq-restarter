@@ -1,20 +1,20 @@
-AQQRestarter
+AQQ Restarter
 ======
-AQQRestarter jest wtyczk¹ do komunikatora [AQQ](http://www.aqq.eu/pl.php). S³u¿y do szybkiego restartowania komunikatora z pozycji menu Program, menu kompaktowego lub menu makr z zasobnika systemowego.
+AQQ Restarter jest wtyczkÄ… do komunikatora [AQQ](http://www.aqq.eu/pl.php). SÅ‚uÅ¼y do szybkiego restartowania komunikatora z pozycji menu Program, menu kompaktowego lub menu makr z zasobnika systemowego.
 
-B³êdy
+BÅ‚Ä™dy
 -------
-Znalezione b³êdy wtyczki nale¿y zg³aszaæ na [tracekerze](http://forum.aqq.eu/tracker/project-38-aqq-restarter/) znajduj¹cym siê na oficjalnym forum komunikatora AQQ lub pisz¹c bezpoœrednio do autora wtyczki (preferowany kontakt poprzez Jabber).
+Znalezione bÅ‚Ä™dy wtyczki naleÅ¼y zgÅ‚aszaÄ‡ na [tracekerze](http://forum.aqq.eu/tracker/project-38-aqq-restarter/) znajdujÄ…cym siÄ™ na oficjalnym forum komunikatora AQQ lub piszÄ…c bezpoÅ›rednio do autora wtyczki (preferowany kontakt poprzez Jabber).
 
 Kontakt z autorem
 -------
-Autorem wtyczki AQQRestarter jest Krzysztof Grochocki. Mo¿esz skontaktowaæ siê z nim drog¹ mailow¹ (kontakt@beherit.pl) lub poprzez Jabber (im@beherit.pl).
+Autorem wtyczki AQQ Restarter jest Krzysztof Grochocki. MoÅ¼esz skontaktowaÄ‡ siÄ™ z nim drogÄ… mailowÄ… (kontakt@beherit.pl) lub poprzez Jabber (im@beherit.pl).
 
 Licencja
 -------
-Wtyczka AQQRestarter objêta jest licencj¹ [GNU General Public License 3](http://www.gnu.org/copyleft/gpl.html).
+Wtyczka AQQ Restarter objÄ™ta jest licencjÄ… [GNU General Public License 3](http://www.gnu.org/copyleft/gpl.html).
 
-    AQQRestarter
+    AQQ Restarter
     Copyright (C) 2008-2014  Krzysztof Grochocki
 
     This program is free software: you can redistribute it and/or modify
