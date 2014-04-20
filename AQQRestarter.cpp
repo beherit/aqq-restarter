@@ -7,6 +7,7 @@
 #include <process.h>
 #include <inifiles.hpp>
 #define AQQRESTARTER_SYSTEM_RESTART L"AQQRestarter/System/Restart"
+#define AQQRESTARTER_SYSTEM_RESTARTING L"AQQRestarter/System/Restarting"
 //---------------------------------------------------------------------------
 
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
@@ -84,6 +85,13 @@ int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 //Serwis restartu
 int __stdcall AQQRestartService (WPARAM, LPARAM)
 {
+  //Wywo³anie notyfikacji AQQRESTARTER_SYSTEM_RESTARTING
+  TPluginHook PluginHook;
+  PluginHook.HookName = AQQRESTARTER_SYSTEM_RESTARTING; // = L"AQQRestarter/System/Restarting"
+  PluginHook.wParam = 0;
+  PluginHook.lParam = 0;
+  PluginLink.CallService(AQQ_SYSTEM_SENDHOOK,(WPARAM)(&PluginHook),0);
+
   //Odczyt sciezki prywatnego profilu wtyczek
   Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(HInstance),0));
   Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
@@ -108,22 +116,6 @@ int __stdcall AQQRestartService (WPARAM, LPARAM)
   PluginLink.CallService(AQQ_SYSTEM_RESTART,0,0);
 
   return 1;
-}
-//---------------------------------------------------------------------------
-
-//Program
-extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
-{
-  PluginInfo.cbSize = sizeof(TPluginInfo);
-  PluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,3,0);
-  PluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
-  PluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
-  PluginInfo.AuthorMail = (wchar_t *)L"email@beherit.pl";
-  PluginInfo.Copyright = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
-  PluginInfo.Homepage = (wchar_t *)L"http://beherit.pl";
-
-  return &PluginInfo;
 }
 //---------------------------------------------------------------------------
 
@@ -211,6 +203,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
   }
 
   Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(HInstance),0));
+  Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
   if(FileExists(Path + "\\\\Restarter.exe"))
    DeleteFile(Path + "\\\\Restarter.exe");
 
@@ -239,6 +232,21 @@ extern "C" int __declspec(dllexport) __stdcall Unload()
   PluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&PluginActionMakra));
 
   return 0;
+}
+//---------------------------------------------------------------------------
+
+extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
+{
+  PluginInfo.cbSize = sizeof(TPluginInfo);
+  PluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,4,0);
+  PluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
+  PluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.AuthorMail = (wchar_t *)L"email@beherit.pl";
+  PluginInfo.Copyright = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.Homepage = (wchar_t *)L"http://beherit.pl";
+
+  return &PluginInfo;
 }
 //---------------------------------------------------------------------------
 
