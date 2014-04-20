@@ -1,15 +1,2 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<BorlandProject>
-	<Transactions>
-    <Transaction>1899-12-30 00:00:00.000.702,=C:\Users\Beherit\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.188,D:\Dropbox\Projects\AQQ\Plugins\AQQRestarter\2.2.0.0\Restarter\RestarterPCH.h=C:\Users\Beherit\Documents\RAD Studio\Projects\Project1PCH1.h</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.722,=C:\Users\Beherit\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.455,D:\Dropbox\Projects\AQQ\Plugins\AQQRestarter\2.2.0.0\Restarter\RestarterFrm.h=D:\Dropbox\Projects\AQQ\Plugins\AQQRestarter\2.2.0.0\Restarter\Restarter.h</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.705,D:\Dropbox\Projects\AQQ\Plugins\AQQRestarter\2.2.0.0\Restarter\Restarter.cbproj=C:\Users\Beherit\Documents\RAD Studio\Projects\Project1.cbproj</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.930,D:\Dropbox\Projects\AQQ\Plugins\AQQRestarter\2.2.0.0\Restarter\Restarter.dfm=C:\Users\Beherit\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.455,D:\Dropbox\Projects\AQQ\Plugins\AQQRestarter\2.2.0.0\Restarter\RestarterFrm.dfm=D:\Dropbox\Projects\AQQ\Plugins\AQQRestarter\2.2.0.0\Restarter\Restarter.dfm</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.930,D:\Dropbox\Projects\AQQ\Plugins\AQQRestarter\2.2.0.0\Restarter\Restarter.h=C:\Users\Beherit\Documents\RAD Studio\Projects\Unit1.h</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.455,D:\Dropbox\Projects\AQQ\Plugins\AQQRestarter\2.2.0.0\Restarter\RestarterFrm.cpp=D:\Dropbox\Projects\AQQ\Plugins\AQQRestarter\2.2.0.0\Restarter\Restarter.cpp</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.930,D:\Dropbox\Projects\AQQ\Plugins\AQQRestarter\2.2.0.0\Restarter\Restarter.cpp=C:\Users\Beherit\Documents\RAD Studio\Projects\Unit1.cpp</Transaction>
-  </Transactions>
-</BorlandProject>
+<BorlandProject/>
