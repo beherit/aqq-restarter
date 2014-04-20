@@ -6,6 +6,7 @@
 #include "Aqq.h"
 #include <process.h>
 #include <inifiles.hpp>
+#define AQQRESTARTER_SYSTEM_RESTART L"AQQRestarter/System/Restart"
 //---------------------------------------------------------------------------
 
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
@@ -55,12 +56,12 @@ int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
   {
 	//Katalog prywatny wtyczel
 	Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(HInstance),0));
-    Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+	Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
     if(!FileExists(Path + "\\\\AQQRestarter.png"))
     {
 	  //Wypakowanie ikon
-	  SaveResourceToFile((Path + "\\\\AQQRestarter.png").c_str(),"ID_PNG");
+	  SaveResourceToFile((Path + "\\\\AQQRestarter.png").t_str(),"ID_PNG");
 	  //Przypisanie ikony
 	  PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,(WPARAM)(plugin_icon_idx),(LPARAM)((Path + "\\\\AQQRestarter.png").w_str()));
       //Usuniecie ikony
@@ -78,7 +79,7 @@ int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 //---------------------------------------------------------------------------
 
 //Serwis restartu
-int __stdcall AqqReStartService (WPARAM, LPARAM)
+int __stdcall AQQRestartService (WPARAM, LPARAM)
 {
   //Odczyt sciezki prywatnego profilu wtyczek
   Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(HInstance),0));
@@ -99,13 +100,13 @@ int __stdcall AqqReStartService (WPARAM, LPARAM)
 
   //Wypakowanie programu do restartowania AQQ
   Path = Path + "\\\\Restarter.exe";
-  SaveResourceToFile(Path.c_str(),"ID_EXE");
+  SaveResourceToFile(Path.t_str(),"ID_EXE");
   //Uruchomienie go
-  ShellExecute(NULL, "open", Path.c_str(), NULL, NULL, SW_NORMAL);
+  ShellExecute(NULL, "open", Path.t_str(), NULL, NULL, SW_NORMAL);
   //Zamkniêcie AQQ
   PluginLink.CallService(AQQ_SYSTEM_RESTART,0,0);
 
-  return 0;
+  return 1;
 }
 //---------------------------------------------------------------------------
 
@@ -113,20 +114,20 @@ int __stdcall AqqReStartService (WPARAM, LPARAM)
 extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
 {
   //Sprawdzanie wersji AQQ
-  if (CompareVersion(AQQVersion,PLUGIN_MAKE_VERSION(2,1,0,55))<0)
+  /*if(CompareVersion(AQQVersion,PLUGIN_MAKE_VERSION(2,1,0,55))<0)
   {
 	MessageBox(Application->Handle,
 	  "Wymagana wesja AQQ przez wtyczkê to minimum 2.1.0.55!\n"
 	  "Wtyczka AQQ Restarter nie bêdzie dzia³aæ poprawnie!",
 	  "Nieprawid³owa wersja AQQ",
 	  MB_OK | MB_ICONEXCLAMATION);
-  }
+  }*/
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,1,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,2,0);
   PluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   PluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
-  PluginInfo.AuthorMail = (wchar_t *)L"sirbeherit@gmail.com";
+  PluginInfo.AuthorMail = (wchar_t *)L"email@beherit.pl";
   PluginInfo.Copyright = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   PluginInfo.Homepage = (wchar_t *)L"http://beherit.pl";
 
@@ -137,14 +138,14 @@ extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVe
 void PrzypiszSkrotMenu()
 {
   PluginActionMenu.cbSize = sizeof(TPluginAction);
-  PluginActionMenu.pszName = (wchar_t*)L"AQQRestarterPrzypiszSkrotMenu";
+  PluginActionMenu.pszName = (wchar_t*)L"AQQRestarter_SkrotMenu";
   if(Polish==1)
    PluginActionMenu.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
   else
    PluginActionMenu.pszCaption = (wchar_t*) L"Restart AQQ";
   PluginActionMenu.Position = 12;
   PluginActionMenu.IconIndex = plugin_icon_idx;
-  PluginActionMenu.pszService = (wchar_t*) L"serwis_aqqrestart";
+  PluginActionMenu.pszService = (wchar_t*) L"serwis_AQQRestartService";
   PluginActionMenu.pszPopupName = (wchar_t*) L"muProgram";
 
   PluginLink.CallService(AQQ_CONTROLS_CREATEPOPUPMENUITEM,0,(LPARAM)(&PluginActionMenu));
@@ -154,14 +155,14 @@ void PrzypiszSkrotMenu()
 void PrzypiszSkrotMakra()
 {
   PluginActionMakra.cbSize = sizeof(TPluginAction);
-  PluginActionMakra.pszName = (wchar_t*)L"AQQRestarterPrzypiszSkrotMakra";
+  PluginActionMakra.pszName = (wchar_t*)L"AQQRestarter_SkrotMakra";
   if(Polish==1)
    PluginActionMakra.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
   else
    PluginActionMakra.pszCaption = (wchar_t*) L"Restart AQQ";
   PluginActionMakra.Position = 14;
   PluginActionMakra.IconIndex = plugin_icon_idx;
-  PluginActionMakra.pszService = (wchar_t*) L"serwis_aqqrestart";
+  PluginActionMakra.pszService = (wchar_t*) L"serwis_AQQRestartService";
   PluginActionMakra.pszPopupName = (wchar_t*) L"popMacros";
 
   PluginLink.CallService(AQQ_CONTROLS_CREATEPOPUPMENUITEM,0,(LPARAM)(&PluginActionMakra));
@@ -198,7 +199,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
 	if(!FileExists(Path + "\\\\AQQRestarter.png"))
 	{
 	  //Wypakowanie ikon
-	  SaveResourceToFile((Path + "\\\\AQQRestarter.png").c_str(),"ID_PNG");
+	  SaveResourceToFile((Path + "\\\\AQQRestarter.png").t_str(),"ID_PNG");
 	  //Przypisanie ikony
 	  plugin_icon_idx=PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)((Path + "\\\\AQQRestarter.png").w_str()));
       //Usuniecie ikony
@@ -216,13 +217,15 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
    DeleteFile(Path + "\\\\Restarter.exe");
 
   //Utworzenie serwisu restartu
-  PluginLink.CreateServiceFunction(L"serwis_aqqrestart",AqqReStartService);
+  PluginLink.CreateServiceFunction(L"serwis_AQQRestartService",AQQRestartService);
   //Przypisanie skrotow
   PrzypiszSkrotMenu();
   PrzypiszSkrotMakra();
 
   //Hook na zmianê kompozycji
   PluginLink.HookEvent(AQQ_SYSTEM_THEMECHANGED, OnThemeChanged);
+  //Hook SDK wtyczki
+  PluginLink.HookEvent(AQQRESTARTER_SYSTEM_RESTART,AQQRestartService);
 
   return 0;
 }
@@ -230,8 +233,9 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
 
 extern "C" int __declspec(dllexport) __stdcall Unload()
 {
+  PluginLink.UnhookEvent(AQQRestartService);
   PluginLink.UnhookEvent(OnThemeChanged);
-  PluginLink.DestroyServiceFunction(AqqReStartService);
+  PluginLink.DestroyServiceFunction(AQQRestartService);
   PluginLink.CallService(AQQ_ICONS_DESTROYPNGICON,0,(LPARAM)(plugin_icon_idx));
   PluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&PluginActionMenu));
   PluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&PluginActionMakra));
