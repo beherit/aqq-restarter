@@ -1,3 +1,10 @@
+2.3.0.0
+-----
+* Dodanie 64-bitowej wersji wtyczki.
+* Autologowanie na profile niezabezpieczone has³em bez opcji autologowania.
+* Zmiany w pliku wspomagaj¹cym restart.
+* Inne mniej wa¿ne zmiany w kodzie wtyczki.
+
 2.2.0.0
 -----
 * Przepisanie wtyczki pod kompilator Embarcadero C++ Builder XE3.

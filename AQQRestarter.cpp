@@ -1,9 +1,9 @@
-#include <vcl.h>
-#include <windows.h>
+//#include <vcl.h>
+//#include <windows.h>
+#include <System.hpp>
+#include <PluginAPI.h>
 #pragma hdrstop
 #pragma argsused
-#include <PluginAPI.h>
-#include <process.h>
 #include <inifiles.hpp>
 #define AQQRESTARTER_SYSTEM_RESTART L"AQQRestarter/System/Restart"
 #define AQQRESTARTER_SYSTEM_RESTARTING L"AQQRestarter/System/Restarting"
@@ -22,8 +22,6 @@ TPluginAction PluginActionProgramItem;
 TPluginAction PluginActionMacrosItem;
 //IKONA-W-INTERFEJSIE--------------------------------------------------------
 int AQQRESTARTER;
-//LOKALIZACJA----------------------------------------------------------------
-bool Polish;
 //FORWARD-AQQ-HOOKS----------------------------------------------------------
 int __stdcall SystemRestart(WPARAM wParam, LPARAM lParam);
 int __stdcall OnThemeChanged(WPARAM wParam, LPARAM lParam);
@@ -35,6 +33,11 @@ UnicodeString GetPluginUserDir()
   return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,0,0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 }
 //---------------------------------------------------------------------------
+UnicodeString GetPluginUserDirW()
+{
+  return (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,0,0);
+}
+//---------------------------------------------------------------------------
 
 //Pobieranie sciezki do skorki kompozycji
 UnicodeString GetThemeDir()
@@ -44,23 +47,47 @@ UnicodeString GetThemeDir()
 //---------------------------------------------------------------------------
 
 //Zapisywanie zasobów
-bool SaveResourceToFile(UnicodeString FileName, UnicodeString Res)
+void ExtractRes(wchar_t* FileName, wchar_t* ResName, wchar_t* ResType)
 {
-  HRSRC hrsrc = FindResource(HInstance, Res.w_str(), RT_RCDATA);
-  if(hrsrc == NULL) return false;
-  DWORD size = SizeofResource(HInstance, hrsrc);
-  HGLOBAL hglob = LoadResource(HInstance, hrsrc);
-  LPVOID rdata = LockResource(hglob);
-  HANDLE hFile = CreateFile(FileName.w_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-  DWORD writ;
-  WriteFile(hFile, rdata, size, &writ, NULL);
-  CloseHandle(hFile);
-  return true;
+  TPluginTwoFlagParams PluginTwoFlagParams;
+  PluginTwoFlagParams.cbSize = sizeof(TPluginTwoFlagParams);
+  PluginTwoFlagParams.Param1 = ResName;
+  PluginTwoFlagParams.Param2 = ResType;
+  PluginTwoFlagParams.Flag1 = (int)HInstance;
+  PluginLink.CallService(AQQ_FUNCTION_SAVERESOURCE,(WPARAM)&PluginTwoFlagParams,(LPARAM)FileName);
+}
+//---------------------------------------------------------------------------
+
+//Sprawdzanie czy profil jest zabezpieczony haslem
+bool ChkPassEnabled()
+{
+  TStrings* IniList = new TStringList();
+  IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
+  TMemIniFile *Settings = new TMemIniFile("ChkPassEnabled.ini");
+  Settings->SetStrings(IniList);
+  delete IniList;
+  UnicodeString SkinsEnabled = Settings->ReadString("Security","ProfilePassActive","0");
+  delete Settings;
+  return StrToBool(SkinsEnabled);
+}
+//---------------------------------------------------------------------------
+
+//Sprawdzanie czy wlaczona jest opcja logowania
+bool ChkAutologonEnabled()
+{
+  TStrings* IniList = new TStringList();
+  IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
+  TMemIniFile *Settings = new TMemIniFile("ChkAutologonEnabled");
+  Settings->SetStrings(IniList);
+  delete IniList;
+  UnicodeString SkinsEnabled = Settings->ReadString("Settings","AutoLogin","0");
+  delete Settings;
+  return StrToBool(SkinsEnabled);
 }
 //---------------------------------------------------------------------------
 
 //Serwis restartu
-int __stdcall SystemRestart(WPARAM, LPARAM)
+int __stdcall SystemRestart(WPARAM wParam, LPARAM lParam)
 {
   //Wysy³anie notyfikacji AQQRESTARTER_SYSTEM_RESTARTING
   TPluginHook PluginHook;
@@ -68,32 +95,16 @@ int __stdcall SystemRestart(WPARAM, LPARAM)
   PluginHook.wParam = 0;
   PluginHook.lParam = 0;
   PluginLink.CallService(AQQ_SYSTEM_SENDHOOK,(WPARAM)(&PluginHook),0);
-  //Pobieranie sciezki katalogu prywatnego wtyczek
-  UnicodeString PluginUserDir = GetPluginUserDir();
-  //Zapis sciezki AQQ, has³a oraz nazwy profilu do pliku
-  TIniFile *Ini = new TIniFile(PluginUserDir+"\\\\AQQRestarter.ini");
-  //Odczyt has³a profilu
-  TStrings* IniList = new TStringList();
-  IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
-  TMemIniFile *Settings = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
-  Settings->SetStrings(IniList);
-  delete IniList;
-  if(StrToBool(Settings->ReadString("Security","ProfilePassActive","1")))
+  //Profil niezabezpiecony haslem bez opcji autologowania
+  if((!ChkPassEnabled())&&(!ChkAutologonEnabled()))
   {
-	UnicodeString Password = Settings->ReadString("Security","ProfilePass","");
-	Ini->WriteString("Restarter", "Password", Password);
+	//Wypakowanie programu do wspomgania restartu AQQ
+	ExtractRes((GetPluginUserDirW() + "\\Restarter.exe").w_str(),L"RESTARTER",L"DATA");
+	//Uruchomienie programu do wspomgania restartu AQQ
+	ShellExecute(NULL, L"open", (GetPluginUserDir()+"\\\\Restarter.exe").w_str(), NULL, NULL, SW_HIDE);
   }
-  delete Settings;
-  //Odczyt PID procesu AQQ
-  Ini->WriteString("Restarter", "PID", getpid());
-  delete Ini;
-  //Wypakowanie programu do wspomgania restartu AQQ
-  PluginUserDir = PluginUserDir + "\\\\Restarter.exe";
-  SaveResourceToFile(PluginUserDir,"ID_EXE");
-  //Uruchomienie programu do wspomgania restartu AQQ
-  ShellExecute(NULL, L"open", PluginUserDir.w_str(), NULL, NULL, SW_NORMAL);
-  //Zamkniêcie AQQ
-  PluginLink.CallService(AQQ_SYSTEM_RESTART,0,0);
+  //Restart AQQ z dzierzawa uprawnien
+  PluginLink.CallService(AQQ_SYSTEM_RESTART,1,0);
   //Zwrot w funkcji
   return 1;
 }
@@ -119,7 +130,7 @@ int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 	if(!FileExists(PluginUserDir+"\\\\AQQRestarter.png"))
 	{
 	  //Wypakowanie ikony
-	  SaveResourceToFile(PluginUserDir+"\\\\AQQRestarter.png","ID_PNG");
+	  ExtractRes((GetPluginUserDirW()+"\\AQQRestarter.png").w_str(),L"ICON",L"DATA");
 	  //Aktualizacja ikony w interfejsie
 	  AQQRESTARTER = PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,AQQRESTARTER,(LPARAM)(PluginUserDir+"\\\\AQQRestarter.png").w_str());
 	  //Usuniecie ikony
@@ -149,10 +160,7 @@ void BuildProgramItem()
   //Wypelnianie struktury
   PluginActionProgramItem.cbSize = sizeof(TPluginAction);
   PluginActionProgramItem.pszName = L"AQQRestarterProgramItem";
-  if(Polish)
-   PluginActionProgramItem.pszCaption = L"Zrestartuj AQQ";
-  else
-   PluginActionProgramItem.pszCaption = L"Restart AQQ";
+  PluginActionProgramItem.pszCaption = L"Zrestartuj AQQ";
   PluginActionProgramItem.Position = Action->Position - 2;
   PluginActionProgramItem.IconIndex = AQQRESTARTER;
   PluginActionProgramItem.pszService = L"sAQQRestarterSystemRestarte";
@@ -168,10 +176,7 @@ void BuildMacrosItem()
   //Wypelnianie struktury
   PluginActionMacrosItem.cbSize = sizeof(TPluginAction);
   PluginActionMacrosItem.pszName = L"AQQRestarterMacrosIte";
-  if(Polish)
-   PluginActionMacrosItem.pszCaption = L"Zrestartuj AQQ";
-  else
-   PluginActionMacrosItem.pszCaption = L"Restart AQQ";
+  PluginActionMacrosItem.pszCaption = L"Zrestartuj AQQ";
   PluginActionMacrosItem.Position = 14;
   PluginActionMacrosItem.IconIndex = AQQRESTARTER;
   PluginActionMacrosItem.pszService = L"sAQQRestarterSystemRestarte";
@@ -185,18 +190,12 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
 {
   //Linkowanie wtyczki z komunikatorem
   PluginLink = *Link;
-  //Rozpoznanie lokalizacji
-  UnicodeString Lang = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETLANGSTR,0,(LPARAM)(L"Password")));
-  if(Lang=="Has³o")
-   Polish = true;
-  else
-   Polish = false;
   //Pobieranie sciezki do skorki kompozycji
   UnicodeString Path = GetThemeDir();
   //Jezeli kompozycja posiada wlasna ikonke dla wtyczki
   if(FileExists(Path+"\\\\Icons\\\\AQQRestarter.png"))
   {
-    //Przypisanie ikony w interfejsie
+	//Przypisanie ikony w interfejsie
 	AQQRESTARTER = PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0,(LPARAM)(Path+"\\\\Icons\\\\AQQRestarter.png").w_str());
   }
   else
@@ -207,7 +206,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
 	if(!FileExists(Path+"\\\\AQQRestarter.png"))
 	{
 	  //Wypakowanie ikony
-	  SaveResourceToFile(Path+"\\\\AQQRestarter.png","ID_PNG");
+	  ExtractRes((GetPluginUserDirW()+"\\AQQRestarter.png").w_str(),L"ICON",L"DATA");
 	  //Przypisanie ikony w interfejsie
 	  AQQRESTARTER = PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0,(LPARAM)(Path+"\\\\AQQRestarter.png").w_str());
 	  //Usuniecie ikony
@@ -262,7 +261,7 @@ extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"AQQ Restarter";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,2,0,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,3,0,0);
   PluginInfo.Description = L"Szybki restart komunikatora z pozycji menu Program, menu kompaktowego lub menu makr z zasobnika systemowego.";
   PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
