@@ -15,11 +15,14 @@ int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved
 }
 //---------------------------------------------------------------------------
 
-//Utworzenie obiektow do struktur
-TPluginAction PluginActionMenu;
-TPluginAction PluginActionMakra;
 TPluginLink PluginLink;
 TPluginInfo PluginInfo;
+//Przyciski
+TPluginAction PluginActionMenu;
+TPluginAction PluginActionMakra;
+//Ustalanie pozycji
+TPluginItemDescriber PluginItemDescriber;
+PPluginAction Action;
 
 int plugin_icon_idx; //Zmienna do ikony
 bool Polish; //Do lokalizacji
@@ -89,10 +92,8 @@ int __stdcall AQQRestartService (WPARAM, LPARAM)
   TIniFile *Ini = new TIniFile(Path + "\\\\AQQRestarter.ini");
   //Odczyt has³a profilu
   UnicodeString Password = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
-  int x = AnsiPos("ProfilePass=",Password);
-  Password.Delete(1,x+11);
-  x = AnsiPos("\n",Password);
-  Password.Delete(x,Password.Length());
+  Password.Delete(1,AnsiPos("ProfilePass=",Password)+11);
+  Password.Delete(AnsiPos("\n",Password),Password.Length());
   Ini->WriteString("Restarter", "Password", Password);
   //Odczyt PID procesu AQQ
   Ini->WriteString("Restarter", "PID", getpid());
@@ -113,18 +114,9 @@ int __stdcall AQQRestartService (WPARAM, LPARAM)
 //Program
 extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
 {
-  //Sprawdzanie wersji AQQ
-  /*if(CompareVersion(AQQVersion,PLUGIN_MAKE_VERSION(2,1,0,55))<0)
-  {
-	MessageBox(Application->Handle,
-	  "Wymagana wesja AQQ przez wtyczkê to minimum 2.1.0.55!\n"
-	  "Wtyczka AQQ Restarter nie bêdzie dzia³aæ poprawnie!",
-	  "Nieprawid³owa wersja AQQ",
-	  MB_OK | MB_ICONEXCLAMATION);
-  }*/
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,2,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,3,0);
   PluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   PluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = (wchar_t *)L"email@beherit.pl";
@@ -137,13 +129,19 @@ extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVe
 
 void PrzypiszSkrotMenu()
 {
+  PluginItemDescriber.cbSize = sizeof(TPluginItemDescriber);
+  PluginItemDescriber.ParentName = (wchar_t*)L"muProgram";
+  PluginItemDescriber.Name = (wchar_t*)L"Zakocz2";
+
+  Action = (PPluginAction)(PluginLink.CallService(AQQ_CONTROLS_GETPOPUPMENUITEM,0,(LPARAM)(&PluginItemDescriber)));
+
   PluginActionMenu.cbSize = sizeof(TPluginAction);
   PluginActionMenu.pszName = (wchar_t*)L"AQQRestarter_SkrotMenu";
   if(Polish==1)
    PluginActionMenu.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
   else
    PluginActionMenu.pszCaption = (wchar_t*) L"Restart AQQ";
-  PluginActionMenu.Position = 12;
+  PluginActionMenu.Position = Action->Position - 2;
   PluginActionMenu.IconIndex = plugin_icon_idx;
   PluginActionMenu.pszService = (wchar_t*) L"serwis_AQQRestartService";
   PluginActionMenu.pszPopupName = (wchar_t*) L"muProgram";
@@ -192,7 +190,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
   }
   else
   {
-    //Katalog prywatny wtyczel
+	//Katalog prywatny wtyczel
 	Path = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(HInstance),0));
 	Path = StringReplace(Path, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 
