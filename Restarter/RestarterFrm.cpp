@@ -43,7 +43,7 @@ HWND HwndFromPID(DWORD dwPID)
 	//Jezeli PID okna jest taki sam
 	if(PID==dwPID)
 	{
-      //Zapisanie uchwytu do okna
+	  //Zapisanie uchwytu do okna
 	  hWnd = TopHwnd;
 	  //Zatrzymanie petli
 	  TopHwnd = 0;
@@ -109,10 +109,12 @@ void __fastcall TRestarterForm::ProcessTimerTimer(TObject *Sender)
 //Przechodzenie przez okno logowania
 void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
 {
+  //Zatrzymanie timera
+  Timer->Enabled = false;
   //Szukanie okna logowania
   HWND hWindowHandle = FindWindow("TfrmLogon",NULL);
   //Jezeli okno zostalo znalezione
-  if(hWindowHandle)
+  if((hWindowHandle)&&(IsWindow(hWindowHandle))&&(IsWindowVisible(hWindowHandle)))
   {
 	//Jezeli trzeba wprowadzic haslo
 	if(!Password.IsEmpty())
@@ -145,6 +147,9 @@ void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
 		  //Interwal wylaczenia programu zostal osiagniety
 		  if(GiveUpCount==200)
 		   Close();
+		  //Wlaczenie timera
+		  else
+		   Timer->Enabled = true;
 		}
 	  }
 	  //Kontrolka nie zostala znaleziona
@@ -155,6 +160,9 @@ void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
 		//Interwal wylaczenia programu zostal osiagniety
 		if(GiveUpCount==200)
 		 Close();
+		//Wlaczenie timera
+		else
+		 Timer->Enabled = true;
 	  }
 	}
 	//Wpisywanie hasla jest zbedne
@@ -181,6 +189,9 @@ void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
 		//Interwal wylaczenia programu zostal osiagniety
 		if(GiveUpCount==200)
 		 Close();
+		//Wlaczenie timera
+		else
+		 Timer->Enabled = true;
 	  }
     }
   }
@@ -192,6 +203,9 @@ void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
 	//Interwal wylaczenia programu zostal osiagniety
 	if(GiveUpCount==200)
 	 Close();
+	//Wlaczenie timera
+	else
+	 Timer->Enabled = true;
   }
 }
 //---------------------------------------------------------------------------
@@ -200,11 +214,11 @@ void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
 void __fastcall TRestarterForm::HideTimerTimer(TObject *Sender)
 {
   //Oko logowania
-  HWND hWindowHandle = FindWindow("TfrmLogon",NULL);
-  if(hWindowHandle) ShowWindow(hWindowHandle, SW_HIDE);
+  //HWND hFrmLogon = FindWindow("TfrmLogon",NULL);
+  //if(hFrmLogon) ShowWindow(hFrmLogon, SW_HIDE);
   //Chmurka informacyjna
-  hWindowHandle = FindWindow("TfrmMiniStatus",NULL);
-  if(hWindowHandle)	ShowWindow(hWindowHandle, SW_HIDE);
+  HWND hFrmMiniStatus = FindWindow("TfrmMiniStatus",NULL);
+  if(hFrmMiniStatus) ShowWindow(hFrmMiniStatus, SW_HIDE);
 }
 //---------------------------------------------------------------------------
 
