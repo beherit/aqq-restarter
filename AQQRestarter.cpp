@@ -8,8 +8,11 @@
 #include "ikonka.rh"
 //---------------------------------------------------------------------------
 
+HINSTANCE hInstance; //uchwyt do wtyczki
+
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
 {
+  hInstance = hinst;
   return 1;
 }
 
@@ -19,13 +22,41 @@ PluginAction TPluginActionMakra;
 PluginLink TPluginLink;
 PluginInfo TPluginInfo;
 
+AnsiString UserPath;
+int IloscProfili=0;
 int plugin_icon_idx; //Zmienna do ikony
+
+//szukanie profili
+void FindDir(String Dir) //Funkcja szukaj¹ca profile
+{
+  TSearchRec sr;
+
+  if(FindFirst(Dir + "*.*", faAnyFile, sr) == 0)
+     {
+      do{
+         if(((sr.Attr & faDirectory) > 0) & (sr.Name != ".") & (sr.Name != ".."))
+         {
+            IloscProfili++;
+         }
+        }
+        while(FindNext(sr) == 0);
+        FindClose(sr);
+     }
+}
 
 //Serwis restartu
 int __stdcall AqqReStartService (WPARAM, LPARAM)
 {
-  WinExec("aqq.exe", SW_SHOW);
-  TPluginLink.CallService(AQQ_SYSTEM_RUNACTION,0,(LPARAM)(L"aExit"));
+  if (IloscProfili==1)
+  {
+    WinExec("aqq.exe", SW_SHOW);
+    exit(EXIT_SUCCESS);
+  }
+  else
+  {
+    WinExec("aqq.exe", SW_SHOW);
+    TPluginLink.CallService(AQQ_SYSTEM_RUNACTION,0,(LPARAM)(L"aExit"));
+  }
 
   return 0;
 }
@@ -35,12 +66,12 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(0,0,4,0);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(0,0,4,2);
   TPluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
-  TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki";
+  TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
-  TPluginInfo.Copyright = (wchar_t *)L"Prawa zastrze¿one, tylko dla autora.";
-  TPluginInfo.Homepage = (wchar_t *)L"Brak";
+  TPluginInfo.Copyright = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
+  TPluginInfo.Homepage = (wchar_t *)L"";
 
   return &TPluginInfo;
 }
@@ -74,6 +105,21 @@ void PrzypiszSkrotMakra()
 extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
 {
   TPluginLink = *Link;
+
+  //Katalog uzytkownika
+  UserPath = (wchar_t *)(TPluginLink.CallService(AQQ_FUNCTION_GETUSERDIR,(WPARAM)(hInstance),0));
+
+  //Usuwanie nazwy profilu ze sciezki
+  AnsiString temp = "\\";
+  int x = UserPath.LastDelimiter(temp);
+  int y = UserPath.Length();
+  UserPath.Delete(x, y);
+
+  UserPath = StringReplace(UserPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+  UserPath = UserPath + "\\\\";
+
+  //Szukanie ilosci profili
+  FindDir(UserPath);
 
   //Wypakowanie ikony
   HRSRC rsrc = FindResource(HInstance, MAKEINTRESOURCE(ID_PNG), RT_RCDATA);
