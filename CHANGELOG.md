@@ -1,3 +1,8 @@
+2.0.0.0
+-----
+* Przepisanie wtyczki pod kompilator CodeGear C++ Builder 2009.
+* Nowa instancja AQQ jest uruchamiana dopiero wtedy gdy poprzednia zostanie zamkniêta.
+
 1.0.4.2
 -----
 * Poprawiono drobny wyciek pamiêci.
