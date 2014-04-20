@@ -74,7 +74,7 @@ int __stdcall AqqReStartService (WPARAM, LPARAM)
   PluginPath = PluginPath + "\\\\Restarter.exe";
   ExtractExe(ID_EXE,PluginPath);
   //Uruchomienie go
-  WinExec(PluginPath.c_str(), SW_HIDE);
+  ShellExecute(NULL, "open", PluginPath.c_str(), NULL, NULL, SW_SHOWMINIMIZED);
 
   return 0;
 }
@@ -85,7 +85,7 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,2,1);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,2,2);
   TPluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
