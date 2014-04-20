@@ -1,3 +1,7 @@
+2.1.0.0
+-----
+* Zmiany w pliku wspomagaj¹cym restart AQQ.
+
 2.0.4.0
 -----
 * Poprawne usuwanie pliku wspomagaj¹cego restart AQQ.

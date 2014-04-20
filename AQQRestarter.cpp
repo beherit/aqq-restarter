@@ -238,13 +238,13 @@ extern "C" int __declspec(dllexport) __stdcall Unload()
 extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
-  PluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,4,0);
-  PluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
-  PluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
-  PluginInfo.AuthorMail = (wchar_t *)L"email@beherit.pl";
-  PluginInfo.Copyright = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
-  PluginInfo.Homepage = (wchar_t *)L"http://beherit.pl";
+  PluginInfo.ShortName = L"AQQ Restarter";
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,1,0,0);
+  PluginInfo.Description = L"Szybki restart AQQ z pozycji menu";
+  PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.AuthorMail = L"kontakt@beherit.pl";
+  PluginInfo.Copyright = L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.Homepage = L"http://beherit.pl";
 
   return &PluginInfo;
 }

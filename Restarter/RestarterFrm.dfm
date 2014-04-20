@@ -3,8 +3,8 @@ object RestarterForm: TRestarterForm
   Top = 0
   BorderStyle = bsNone
   Caption = 'AQQRestarter'
-  ClientHeight = 80
-  ClientWidth = 100
+  ClientHeight = 60
+  ClientWidth = 60
   Color = clLime
   TransparentColor = True
   TransparentColorValue = clLime

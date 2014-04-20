@@ -14,8 +14,8 @@ __fastcall TRestarterForm::TRestarterForm(TComponent* Owner)
 }
 //---------------------------------------------------------------------------
 UnicodeString Password;
-int Count=0;
-HWND AQQ;
+int Count = 0;
+HWND hWindowHandle;
 DWORD PID;
 //---------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ DWORD PID;
 HWND HwndPID(DWORD dwPID)
 {
   HWND Hwnd = GetTopWindow(0);
-  HWND hWnd = 0;;
+  HWND hWnd = 0;
   DWORD pid;
 
   while(Hwnd)
@@ -37,34 +37,58 @@ HWND HwndPID(DWORD dwPID)
 }
 //---------------------------------------------------------------------------
 
+//Przechodzenie przez okno logowania
 void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
 {
-  AQQ = FindWindow("TfrmLogon",NULL);
-  if(AQQ!=NULL)
+  hWindowHandle = FindWindow("TfrmLogon",NULL);
+  if(hWindowHandle)
   {
-	AQQ = FindWindowEx(AQQ,NULL,"TEdit",NULL);
-	if(AQQ!=NULL)
+	hWindowHandle = FindWindowEx(hWindowHandle,NULL,"TEdit",NULL);
+	if(!hWindowHandle)
 	{
-	  SendMessage(AQQ, WM_SETTEXT, NULL, (LPARAM)Password.c_str());
-	  AQQ = FindWindow("TfrmLogon",NULL);
-	  AQQ = FindWindowEx(AQQ,NULL,"TButton","OK");
-	  if(AQQ!=NULL)
+	  hWindowHandle = FindWindow("TfrmLogon",NULL);
+	  hWindowHandle = FindWindowEx(hWindowHandle,NULL,"TsEdit",NULL);
+	}
+	if(hWindowHandle)
+	{
+	  SendMessage(hWindowHandle, WM_SETTEXT, NULL, (LPARAM)Password.c_str());
+	  hWindowHandle = FindWindow("TfrmLogon",NULL);
+	  hWindowHandle = FindWindowEx(hWindowHandle,NULL,"TButton","OK");
+	  if(!hWindowHandle)
 	  {
-		SendMessage(AQQ, BM_CLICK, 0, 0);
-		Timer->Enabled=false;
+        hWindowHandle = FindWindow("TfrmLogon",NULL);
+		hWindowHandle = FindWindowEx(hWindowHandle,NULL,"TsButton","OK");
+      }
+	  if(hWindowHandle)
+	  {
+		SendMessage(hWindowHandle, BM_CLICK, 0, 0);
+		Timer->Enabled = false;
 		Close();
 	  }
+	  else
+	  {
+		Count++;
+		if(Count==200)
+		 Close();
+	  }
+	}
+	else
+	{
+	  Count++;
+	  if(Count==200)
+	   Close();
 	}
   }
   else
   {
-    Count++;
-    if(Count==200)
-     Close();
+	Count++;
+	if(Count==200)
+	 Close();
   }
 }
 //---------------------------------------------------------------------------
 
+//Pobieranie danych z pliku INI utworzonego przez wtyczke
 void __fastcall TRestarterForm::FormShow(TObject *Sender)
 {
   TIniFile *Ini = new TIniFile(ExtractFilePath(Application->ExeName) + "\\\\AQQRestarter.ini");
@@ -76,46 +100,44 @@ void __fastcall TRestarterForm::FormShow(TObject *Sender)
   if(FileExists(ExtractFilePath(Application->ExeName) + "\\\\AQQRestarter.ini"))
    DeleteFile(ExtractFilePath(Application->ExeName) + "\\\\AQQRestarter.ini");
 
-  if(PID!=0)
+  if(PID)
   {
 	Password=IdDecoderMIME->DecodeString(Password);
 	UTF8String PasswordUTF8 = Password;
 	Password=Utf8ToAnsi(PasswordUTF8);
-	ProcessTimer->Enabled=true;
+	ProcessTimer->Enabled = true;
   }
   else
    Close();
 }
 //---------------------------------------------------------------------------
 
+//Czekanie na zamkniecie siê poprzedniej instancji AQQ
 void __fastcall TRestarterForm::ProcessTimerTimer(TObject *Sender)
 {
-  if(HwndPID(PID)==NULL)
+  if(!HwndPID(PID))
   {
-	ProcessTimer->Enabled=false;
-	Timer->Enabled=true;
+	ProcessTimer->Enabled = false;
+	Timer->Enabled = true;
   }
 }
 //---------------------------------------------------------------------------
 
+//Ukrywanie formy programu
 void __fastcall TRestarterForm::FormPaint(TObject *Sender)
 {
   ShowWindow(Handle, SW_HIDE);
 }
 //---------------------------------------------------------------------------
 
+//Ukrywanie okna logowania i chmurki informacyjnej
 void __fastcall TRestarterForm::HideTimerTimer(TObject *Sender)
 {
-  AQQ = FindWindow("TfrmLogon",NULL);
-  if(AQQ!=NULL)
-  {
-	ShowWindow(AQQ, SW_HIDE);
-  }
-  AQQ = FindWindow("TfrmMiniStatus",NULL);
-  if(AQQ!=NULL)
-  {
-	ShowWindow(AQQ, SW_HIDE);
-  }
+  hWindowHandle = FindWindow("TfrmLogon",NULL);
+  if(hWindowHandle) ShowWindow(hWindowHandle, SW_HIDE);
+
+  hWindowHandle = FindWindow("TfrmMiniStatus",NULL);
+  if(hWindowHandle)	ShowWindow(hWindowHandle, SW_HIDE);
 }
 //---------------------------------------------------------------------------
 
