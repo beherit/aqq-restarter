@@ -1,0 +1,4 @@
+#include "Files.rh"
+
+ID_PNG RCDATA "AQQRestarter.png"
+ID_EXE RCDATA "Restarter.exe"

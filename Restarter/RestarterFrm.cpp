@@ -3,10 +3,9 @@
 #pragma hdrstop
 #include "RestarterFrm.h"
 #include <inifiles.hpp>
-#include <tlhelp32.h>
-#include <Registry.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
+#pragma link "IdCoderMIME"
 #pragma resource "*.dfm"
 TRestarterForm *RestarterForm;
 //---------------------------------------------------------------------------
@@ -16,79 +15,78 @@ __fastcall TRestarterForm::TRestarterForm(TComponent* Owner)
 }
 //---------------------------------------------------------------------------
 
-bool CloseProcess(DWORD ID)
-{
- DWORD ExitCode;
- HWND hWnd;
- bool Result = true;
-
- if(ID)
- {
-  hWnd = OpenProcess(PROCESS_ALL_ACCESS, true, ID);
-  if(hWnd)
-  {
-   GetExitCodeProcess(hWnd, &ExitCode);
-   Result = TerminateProcess(hWnd, ExitCode);
-  }
-  else return false;
- }
- else return false;
-
- CloseHandle(hWnd);
- 
- return Result;
-}
-//---------------------------------------------------------------------------
-
-String GetPathOfProces(DWORD PID)
-{
-  HANDLE hSnapshot=CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,PID);
-  MODULEENTRY32 me32;
-  Module32First(hSnapshot,&me32);
-
-  CloseHandle(hSnapshot);
-
-  return me32.szExePath;
-}
-//---------------------------------------------------------------------------
+AnsiString Password;
+//AnsiString Profile;
+int Count=0;
 
 void __fastcall TRestarterForm::FormShow(TObject *Sender)
 {
   Application->Minimize();
   ShowWindow(Application->Handle, SW_HIDE);
-  //Odczyt PID
-  TIniFile *Ini = new TIniFile(ExtractFilePath(Application->ExeName) + "\\\\Restarter.ini");
-  int PID = Ini->ReadInteger("Restarter", "AQQPid", 0);
+
+  //Odczyt sciezki AQQ, has³a i nazwy profilu
+  TIniFile *Ini = new TIniFile(ExtractFilePath(Application->ExeName) + "\\\\AQQRestarter.ini");
   AnsiString AQQPath = Ini->ReadString("Restarter", "AQQPath", "");
-  AQQPath=StringReplace(AQQPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+  Password = Ini->ReadString("Restarter", "Password", "");
+  //Profile = Ini->ReadString("Restarter", "Profile", "");
   delete Ini;
-  if(PID!=0)
+  //Usuwanie pliku INI
+  if(FileExists(ExtractFilePath(Application->ExeName) + "\\\\AQQRestarter.ini"))
+   DeleteFile(ExtractFilePath(Application->ExeName) + "\\\\AQQRestarter.ini");
+
+  AQQPath=StringReplace(AQQPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+
+  Password=IdDecoderMIME->DecodeToString(Password);
+
+  UTF8String PasswordUTF8 = Password;
+  Password=Utf8ToAnsi(PasswordUTF8);
+
+  if(AQQPath!="")
   {
-    if(AQQPath=="")
-    {
-      //Pobieranie sciezki AQQ przez PID
-      AnsiString AQQPath = GetPathOfProces(PID);
-      AQQPath=StringReplace(AQQPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
-    }
-    //Restartowanie AQQ
-    CloseProcess(PID);
-    //Usuwanie pliku INI
-    if(FileExists(ExtractFilePath(Application->ExeName) + "\\\\Restarter.ini"))
-     DeleteFile(ExtractFilePath(Application->ExeName) + "\\\\Restarter.ini");
-    //Czyszczenie Tray'a
-    HWND hWnd = FindWindow("Shell_TrayWnd", NULL);
-    hWnd = FindWindowEx(hWnd, NULL, "TrayNotifyWnd", NULL);
-    hWnd = FindWindowEx(hWnd, NULL, "SysPager", NULL);
-    hWnd = FindWindowEx(hWnd, NULL, "ToolbarWindow32", NULL);
-    TRect rRect;
-    GetWindowRect(hWnd,&rRect);
-    for (LONG x = 0; x < rRect.right; x += 5)
-     for (LONG y = 0; y < rRect.bottom; y += 5)
-      SendMessage(hWnd,WM_MOUSEMOVE,0,(y << 16) + x);
     //W³aczenie AQQ
     ShellExecute(NULL, "open", AQQPath.c_str(), NULL, NULL, SW_SHOWNORMAL);
+    Timer->Enabled=true;
   }
-  //Wy³¹czanie programu
-  Close();
+  else
+   Close();
 }
 //---------------------------------------------------------------------------
+void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
+{
+  HWND AQQ = FindWindow("TfrmLogon",NULL);
+  if(AQQ!=NULL)
+  {
+    //AQQ = FindWindowEx(AQQ,NULL,"TComboBox",NULL);
+
+    //if(AQQ!=NULL)
+    //{
+    //  int index = SendMessage(AQQ, CB_SELECTSTRING,-1,(LPARAM)Profile.c_str());
+    //  SendMessage(AQQ, CB_SETCURSEL,index,0);
+
+      //AQQ = FindWindow("TfrmLogon",NULL);
+      AQQ = FindWindowEx(AQQ,NULL,"TEdit",NULL);
+      if(AQQ!=NULL)
+      {
+        SendMessage(AQQ, WM_SETTEXT, NULL, (LPARAM)Password.c_str());
+        AQQ = FindWindow("TfrmLogon",NULL);
+        AQQ = FindWindowEx(AQQ,NULL,"TButton","OK");
+        if(AQQ!=NULL)
+        {
+          SendMessage(AQQ, BM_CLICK, 0, 0);
+          Timer->Enabled=false;
+          Close();
+        }
+      }
+    //}
+  }
+
+  else
+  {
+    Count++;
+    if(Count==200)
+     Close();
+  }
+}
+//---------------------------------------------------------------------------
+
+
