@@ -107,7 +107,7 @@ int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
   if(FileExists(ThemeDir+"\\\\Icons\\\\AQQRestarter.png"))
   {
 	//Aktualizacja ikony w interfejsie
-	PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,AQQRESTARTER,(LPARAM)(ThemeDir + "\\\\Icons\\\\AQQRestarter.png").w_str());
+	AQQRESTARTER = PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,AQQRESTARTER,(LPARAM)(ThemeDir + "\\\\Icons\\\\AQQRestarter.png").w_str());
   }
   //Jezeli kompozycja nie posiada wlasnej ikonki dla wtyczki
   else
@@ -120,7 +120,7 @@ int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 	  //Wypakowanie ikony
 	  SaveResourceToFile((PluginUserDir+"\\\\AQQRestarter.png").t_str(),"ID_PNG");
 	  //Aktualizacja ikony w interfejsie
-	  PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,AQQRESTARTER,(LPARAM)(PluginUserDir+"\\\\AQQRestarter.png").w_str());
+	  AQQRESTARTER = PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,AQQRESTARTER,(LPARAM)(PluginUserDir+"\\\\AQQRestarter.png").w_str());
 	  //Usuniecie ikony
 	  DeleteFile(PluginUserDir+"\\\\AQQRestarter.png");
 	}
@@ -128,7 +128,7 @@ int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 	else
 	{
 	  //Aktualizacja ikony w interfejsie
-	  PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,AQQRESTARTER,(LPARAM)(PluginUserDir+"\\\\AQQRestarter.png").w_str());
+	  AQQRESTARTER = PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,AQQRESTARTER,(LPARAM)(PluginUserDir+"\\\\AQQRestarter.png").w_str());
 	}
   }
 
@@ -195,8 +195,8 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
   //Jezeli kompozycja posiada wlasna ikonke dla wtyczki
   if(FileExists(Path+"\\\\Icons\\\\AQQRestarter.png"))
   {
-    //Aktualizacja ikony w interfejsie
-	PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,AQQRESTARTER,(LPARAM)(Path+"\\\\Icons\\\\AQQRestarter.png").w_str());
+    //Przypisanie ikony w interfejsie
+	AQQRESTARTER = PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0,(LPARAM)(Path+"\\\\Icons\\\\AQQRestarter.png").w_str());
   }
   else
   {
@@ -261,7 +261,7 @@ extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"AQQ Restarter";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,1,1,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,1,2,0);
   PluginInfo.Description = L"Szybki restart komunikatora z pozycji menu Program, menu kompaktowego lub menu makr z zasobnika systemowego.";
   PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
