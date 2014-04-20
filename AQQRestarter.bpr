@@ -58,7 +58,7 @@ AutoIncBuild=0
 MajorVer=0
 MinorVer=0
 Release=4
-Build=2
+Build=4
 Debug=0
 PreRelease=0
 Special=0
@@ -70,14 +70,17 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=Krzysztof Grochocki (Beherit)
 FileDescription=
-FileVersion=0.0.4.2
+FileVersion=0.0.4.4
 InternalName=AQQ Restarter
 LegalCopyright=Krzysztof Grochocki (Beherit)
 LegalTrademarks=Krzysztof Grochocki (Beherit)
 OriginalFilename=AQQRestarter.dll
 ProductName=AQQ Restarter
-ProductVersion=0.0.4.2
+ProductVersion=0.0.4.4
 Comments=Restarter AQQ
+
+[Excluded Packages]
+C:\Program Files\ZipForge\Lib\C++ Builder 6\dclZipForgeb6.bpl=ZipForge Package
 
 [HistoryLists\hlIncludePath]
 Count=2
