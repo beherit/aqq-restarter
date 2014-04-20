@@ -5,12 +5,12 @@
     <VERSION value="BCB.06.00"/>
     <PROJECT value="AQQRestarter.dll"/>
     <OBJFILES value="AQQRestarter.obj"/>
-    <RESFILES value="AQQRestarter.res ikonka.res"/>
+    <RESFILES value="AQQRestarter.res Files.res"/>
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES)"/>
     <LIBFILES value=""/>
-    <LIBRARIES value="VCL.lib rtl.lib"/>
-    <SPARELIBS value="rtl.lib VCL.lib"/>
+    <LIBRARIES value="Indy60.lib dclusr.lib VCL.lib rtl.lib"/>
+    <SPARELIBS value="rtl.lib VCL.lib dclusr.lib Indy60.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi vclx.bpi bcbsmp.bpi dclocx.bpi"/>
     <PATHCPP value=".;"/>
     <PATHPAS value=".;"/>
@@ -22,8 +22,8 @@
     <USERDEFINES value="_DEBUG"/>
     <SYSDEFINES value="NO_STRICT"/>
     <MAINSOURCE value="AQQRestarter.bpf"/>
-    <INCLUDEPATH value="$(BCB)\include;$(BCB)\include\vcl"/>
-    <LIBPATH value="$(BCB)\lib\obj;$(BCB)\lib"/>
+    <INCLUDEPATH value="$(BCB)\xpman;&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="&quot;c:\program files\borland\c6&quot;;$(BCB)\Projects\Lib;$(BCB)\xpman;&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par"/>
     <OTHERFILES value=""/>
   </MACROS>
@@ -46,7 +46,7 @@
       <FILE FILENAME="AQQRestarter.res" FORMNAME="" UNITNAME="AQQRestarter.res" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AQQRestarter.bpf" FORMNAME="" UNITNAME="AQQRestarter" CONTAINERID="BPF" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AQQRestarter.cpp" FORMNAME="" UNITNAME="AQQRestarter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="ikonka.RES" FORMNAME="" UNITNAME="ikonka.RES" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Files.RES" FORMNAME="" UNITNAME="Files.RES" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
@@ -58,7 +58,7 @@ AutoIncBuild=0
 MajorVer=1
 MinorVer=0
 Release=4
-Build=1
+Build=2
 Debug=0
 PreRelease=0
 Special=0
@@ -70,13 +70,13 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=Krzysztof Grochocki (Beherit)
 FileDescription=
-FileVersion=1.0.4.1
+FileVersion=1.0.4.2
 InternalName=AQQ Restarter
 LegalCopyright=Krzysztof Grochocki (Beherit)
 LegalTrademarks=Krzysztof Grochocki (Beherit)
 OriginalFilename=AQQRestarter.dll
 ProductName=AQQ Restarter
-ProductVersion=1.0.4.1
+ProductVersion=1.0.4.2
 Comments=Restarter AQQ
 
 [HistoryLists\hlIncludePath]
@@ -108,7 +108,7 @@ RunParams=
 Launcher=
 UseLauncher=0
 DebugCWD=
-HostApplication=C:\Program Files\Wapster\AQQ2\AQQ.exe
+HostApplication=
 RemoteHost=
 RemotePath=
 RemoteLauncher=

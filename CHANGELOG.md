@@ -1,3 +1,9 @@
+1.0.4.2
+-----
+* Poprawiono drobny wyciek pamiêci.
+* Proces AQQ nie jest ju¿ killowany (zapobiega to niezapisywaniu ustawieñ AQQ).
+* Zmieniono tryb uruchamiania ponownie AQQ.
+
 1.0.4.1
 -----
 * Poprawka w usuwania pliku Restarter.exe.

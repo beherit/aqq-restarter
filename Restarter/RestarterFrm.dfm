@@ -52,7 +52,17 @@ object RestarterForm: TRestarterForm
     0000000000000000000000000000000000000000000000000000000000000000
     000000000000000000000000000000000000000000000000000000000000}
   OldCreateOrder = False
+  Position = poScreenCenter
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
+  object Timer: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = TimerTimer
+  end
+  object IdDecoderMIME: TIdDecoderMIME
+    FillChar = '='
+    Left = 32
+  end
 end

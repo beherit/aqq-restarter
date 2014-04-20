@@ -9,8 +9,8 @@
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES) RestarterFrm.dfm"/>
     <LIBFILES value=""/>
-    <LIBRARIES value="rtl.lib vcl.lib"/>
-    <SPARELIBS value="vcl.lib rtl.lib"/>
+    <LIBRARIES value="Indy60.lib rtl.lib vcl.lib"/>
+    <SPARELIBS value="vcl.lib rtl.lib Indy60.lib"/>
     <PACKAGES value="vcl.bpi rtl.bpi vclx.bpi bcbsmp.bpi dclocx.bpi Indy60.bpi"/>
     <PATHCPP value=".;"/>
     <PATHPAS value=".;"/>
@@ -23,7 +23,7 @@
     <SYSDEFINES value="NO_STRICT"/>
     <MAINSOURCE value="Restarter.cpp"/>
     <INCLUDEPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;&quot;D:\Borland - moje projkety\AQQRestarter\1.0.2.0\Restarter&quot;;$(BCB)\include;$(BCB)\include\vcl"/>
-    <LIBPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;&quot;D:\Borland - moje projkety\AQQRestarter\1.0.2.0\Restarter&quot;;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <LIBPATH value="&quot;c:\program files\borland\c6&quot;;&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;&quot;D:\Borland - moje projkety\AQQRestarter\1.0.2.0\Restarter&quot;;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par"/>
     <OTHERFILES value=""/>
   </MACROS>
