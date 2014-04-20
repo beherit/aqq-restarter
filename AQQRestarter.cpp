@@ -6,20 +6,22 @@
 #include "Aqq.h"
 #include <memory>
 #include "ikonka.rh"
+//---------------------------------------------------------------------------
 
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
 {
   return 1;
 }
 
-// Utworzenie obiektow do struktur
+//Utworzenie obiektow do struktur
 PluginAction TPluginActionMenu;
 PluginAction TPluginActionMakra;
 PluginLink TPluginLink;
 PluginInfo TPluginInfo;
 
-int plugin_icon_idx;
+int plugin_icon_idx; //Zmienna do ikony
 
+//Serwis restartu
 int __stdcall AqqReStartService (WPARAM, LPARAM)
 {
   WinExec("aqq.exe", SW_SHOW);
@@ -32,8 +34,8 @@ int __stdcall AqqReStartService (WPARAM, LPARAM)
 extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQVersion)
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
-  TPluginInfo.ShortName = (wchar_t*)L"AQQRestarter";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(0,0,2,0);
+  TPluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(0,0,3,0);
   TPluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
@@ -45,12 +47,12 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
   return &TPluginInfo;
 }
 
-void PrzypiszAkcje()
+void PrzypiszSkrotMenu()
 {
   TPluginActionMenu.cbSize = sizeof(PluginAction);
   TPluginActionMenu.pszName = (wchar_t*)L"AqqReStartServ";
   TPluginActionMenu.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
-  TPluginActionMenu.Position = 11;
+  TPluginActionMenu.Position = 12;
   TPluginActionMenu.IconIndex = plugin_icon_idx;
   TPluginActionMenu.pszService = (wchar_t*) L"serwis_aqqrestart";
   TPluginActionMenu.pszPopupName = (wchar_t*) L"muProgram";
@@ -60,7 +62,7 @@ void PrzypiszAkcje()
   TPluginLink.CreateServiceFunction(L"serwis_aqqrestart",AqqReStartService);
 }
 
-void PrzypiszAkcje2()
+void PrzypiszSkrotMakra()
 {
   TPluginActionMakra.cbSize = sizeof(PluginAction);
   TPluginActionMakra.pszName = (wchar_t*)L"AqqReStartServ";
@@ -79,7 +81,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
 {
   TPluginLink = *Link;
 
-  //wypakowanie ikonki
+  //Wypakowanie ikony
   HRSRC rsrc = FindResource(HInstance, MAKEINTRESOURCE(ID_PNG), RT_RCDATA);
 
   DWORD Size = SizeofResource(HInstance, rsrc);
@@ -93,15 +95,17 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
   stream->Write(MemPtr, Size);
   stream->Position = 0;
   stream->SaveToFile("AQQRestarter.png");
-  //koniec
+  //Wypakowanie ikony - Koniec
 
+  //Przypisanie ikony
   wchar_t* plugin_icon_path = L"AQQRestarter.png";
   plugin_icon_idx=TPluginLink.CallService(AQQ_ICONS_LOADPNGICON,0, (LPARAM)(plugin_icon_path));
 
+  //Usuniecie ikony
   DeleteFile("AQQRestarter.png");
 
-  PrzypiszAkcje();
-  PrzypiszAkcje2();
+  PrzypiszSkrotMenu();
+  PrzypiszSkrotMakra();
 
   return 0;
 }
