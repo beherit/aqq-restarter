@@ -80,9 +80,12 @@ int __stdcall SystemRestart(WPARAM, LPARAM)
   TMemIniFile *Settings = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
   Settings->SetStrings(IniList);
   delete IniList;
-  UnicodeString Password = Settings->ReadString("Security","ProfilePass","");
+  if(StrToBool(Settings->ReadString("Security","ProfilePassActive","1")))
+  {
+	UnicodeString Password = Settings->ReadString("Security","ProfilePass","");
+	Ini->WriteString("Restarter", "Password", Password);
+  }
   delete Settings;
-  Ini->WriteString("Restarter", "Password", Password);
   //Odczyt PID procesu AQQ
   Ini->WriteString("Restarter", "PID", getpid());
   delete Ini;
@@ -261,7 +264,7 @@ extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"AQQ Restarter";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,1,2,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,1,3,0);
   PluginInfo.Description = L"Szybki restart komunikatora z pozycji menu Program, menu kompaktowego lub menu makr z zasobnika systemowego.";
   PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";

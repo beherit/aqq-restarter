@@ -1,3 +1,9 @@
+2.1.3.0
+-----
+* Wykonywanie akcji za u¿ytkownika przez plik wspomagaj¹cy restart dopiero po faktycznym pokazaniu siê okna logowania.
+* Plik wspomagaj¹cym restart nie ukrywa ju¿ okna logowania.
+* Niewpisywanie has³a do profilu, gdy nie jest on zabezpieczony.
+
 2.1.2.0
 -----
 * Poprawne ³adowanie ikony wtyczki do interfejsu komunikatora.
