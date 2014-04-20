@@ -1,3 +1,7 @@
+1.0.4.0
+-----
+* Ewidentny brak okna logowania nawet przy profilu zabezpieczonym na has³o.
+
 1.0.3.0
 -----
 * Dodanie angielskiej lokalizacji.
