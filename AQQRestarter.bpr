@@ -57,8 +57,8 @@ IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=0
 MinorVer=0
-Release=3
-Build=0
+Release=4
+Build=2
 Debug=0
 PreRelease=0
 Special=0
@@ -68,15 +68,15 @@ Locale=1045
 CodePage=1250
 
 [Version Info Keys]
-CompanyName=Krzysztof Grochocki [Beherit]
+CompanyName=Krzysztof Grochocki (Beherit)
 FileDescription=
-FileVersion=0.0.3.0
+FileVersion=0.0.4.2
 InternalName=AQQ Restarter
-LegalCopyright=Krzysztof Grochocki (c) 2008
-LegalTrademarks=Krzysztof Grochocki (c) 2008
+LegalCopyright=Krzysztof Grochocki (Beherit)
+LegalTrademarks=Krzysztof Grochocki (Beherit)
 OriginalFilename=AQQRestarter.dll
 ProductName=AQQ Restarter
-ProductVersion=0.0.3.0
+ProductVersion=0.0.4.2
 Comments=Restarter AQQ
 
 [HistoryLists\hlIncludePath]

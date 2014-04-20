@@ -1,3 +1,7 @@
+0.0.4.2
+-----
+* Brak ekranu logowania po restarcie.
+
 0.0.4.0
 -----
 * Zmienienie sposobu restartu AQQ! Od teraz ju¿ nie zostaje ikonka w tray’u.
