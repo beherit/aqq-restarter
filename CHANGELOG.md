@@ -1,3 +1,9 @@
+1.0.1.2
+-----
+* Przywrócenie starej pozycji elementu w menu Program (z wersji 1.0.0.0).
+* Ma³e poprawki w kodzie.
+* Wtyczka sprawdza przy ³adowaniu czy w katalogu aktywnej kompozycji w folderze Icons znajduje siê plik "AQQRestarter.png", je¿eli tak ustawia go jako grafikê przycisku.
+
 1.0.1.0
 -----
 * Przystosowanie pozycji ikonki do wersji AQQ 2.0.5.15+.
