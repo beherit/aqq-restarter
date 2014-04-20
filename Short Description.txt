@@ -1,0 +1,1 @@
+Wtyczka s³u¿y do szybkiego restartowania komunikatora z pozycji menu Program, menu kompaktowego lub menu makr z zasobnika systemowego.
