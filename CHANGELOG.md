@@ -1,3 +1,8 @@
+2.0.4.0
+-----
+* Poprawne usuwanie pliku wspomagaj¹cego restart AQQ.
+* Dodano notyfikacjê AQQRESTARTER_SYSTEM_RESTARTING wywo³ywan¹ przed restartem AQQ.
+
 2.0.3.0
 -----
 * Inteligentne ustalanie pozycji elementu w g³ównym menu AQQ.
