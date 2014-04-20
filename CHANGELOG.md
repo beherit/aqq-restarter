@@ -1,3 +1,8 @@
+1.0.4.1
+-----
+* Poprawka w usuwania pliku Restarter.exe.
+* Przy zmianie kompozycji sprawdzany jest jej katolog w poszukiwaniu ikonki dla wtyczki.
+
 1.0.4.0
 -----
 * Ewidentny brak okna logowania nawet przy profilu zabezpieczonym na has³o.
