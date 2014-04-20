@@ -112,4 +112,10 @@ object RestarterForm: TRestarterForm
     OnTimer = ProcessTimerTimer
     Top = 32
   end
+  object HideTimer: TTimer
+    Interval = 100
+    OnTimer = HideTimerTimer
+    Left = 32
+    Top = 32
+  end
 end

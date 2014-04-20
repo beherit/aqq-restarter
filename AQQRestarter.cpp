@@ -86,7 +86,6 @@ int __stdcall AqqReStartService (WPARAM, LPARAM)
 
   //Zapis sciezki AQQ, has³a oraz nazwy profilu do pliku
   TIniFile *Ini = new TIniFile(Path + "\\\\AQQRestarter.ini");
-  Ini->WriteString("Restarter", "AQQPath", (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETAPPFILEPATH,0,0)));
   //Odczyt has³a profilu
   UnicodeString Password = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
   int x = AnsiPos("ProfilePass=",Password);
@@ -96,12 +95,6 @@ int __stdcall AqqReStartService (WPARAM, LPARAM)
   Ini->WriteString("Restarter", "Password", Password);
   //Odczyt PID procesu AQQ
   Ini->WriteString("Restarter", "PID", getpid());
-  //Odczyt nazwy profilu
-  //AnsiString ProfileName = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETUSERDIR,(WPARAM)(HInstance),0));
-  //x = ProfileName.LastDelimiter("\\");
-  //ProfileName.Delete(1,x);
-  //ProfileName=ProfileName.Trim();
-  //Ini->WriteString("Restarter", "Profile", ProfileName);
   delete Ini;
 
   //Wypakowanie programu do restartowania AQQ
@@ -110,18 +103,27 @@ int __stdcall AqqReStartService (WPARAM, LPARAM)
   //Uruchomienie go
   ShellExecute(NULL, "open", Path.c_str(), NULL, NULL, SW_NORMAL);
   //Zamkniêcie AQQ
-  PluginLink.CallService(AQQ_SYSTEM_RUNACTION,0,(LPARAM)(L"aExit"));
+  PluginLink.CallService(AQQ_SYSTEM_RESTART,0,0);
 
   return 0;
 }
 //---------------------------------------------------------------------------
 
 //Program
-extern "C"  __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
+extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
 {
+  //Sprawdzanie wersji AQQ
+  if (CompareVersion(AQQVersion,PLUGIN_MAKE_VERSION(2,1,0,55))<0)
+  {
+	MessageBox(Application->Handle,
+	  "Wymagana wesja AQQ przez wtyczkê to minimum 2.1.0.55!\n"
+	  "Wtyczka AQQ Restarter nie bêdzie dzia³aæ poprawnie!",
+	  "Nieprawid³owa wersja AQQ",
+	  MB_OK | MB_ICONEXCLAMATION);
+  }
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,0,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,0,1,0);
   PluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   PluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = (wchar_t *)L"sirbeherit@gmail.com";
@@ -140,7 +142,7 @@ void PrzypiszSkrotMenu()
    PluginActionMenu.pszCaption = (wchar_t*) L"Zrestartuj AQQ";
   else
    PluginActionMenu.pszCaption = (wchar_t*) L"Restart AQQ";
-  PluginActionMenu.Position = 11;
+  PluginActionMenu.Position = 12;
   PluginActionMenu.IconIndex = plugin_icon_idx;
   PluginActionMenu.pszService = (wchar_t*) L"serwis_aqqrestart";
   PluginActionMenu.pszPopupName = (wchar_t*) L"muProgram";
