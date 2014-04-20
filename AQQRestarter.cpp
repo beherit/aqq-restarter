@@ -62,13 +62,32 @@ void ExtractExe(unsigned short ID, AnsiString FileName)
 //Serwis restartu
 int __stdcall AqqReStartService (WPARAM, LPARAM)
 {
+  //Odczyt sciezki profilu
+  AnsiString UserPath = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETUSERDIR,(WPARAM)(hInstance),0));
+  UserPath = StringReplace(UserPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+  //Zmiana ustawien hasla
+  TIniFile *Ini = new TIniFile(UserPath + "\\\\Settings.ini");
+  bool AutoLogin=Ini->ReadBool("Settings", "AutoLogin", 0);
+  if(AutoLogin==0)
+  {
+    Ini->WriteBool("Settings", "AutoLogin", 1);
+    Ini->WriteBool("Settings", "AQQRestarter", 1);
+  }
+  bool ProfilePassActive=Ini->ReadBool("Security", "ProfilePassActive", 0);
+  if(ProfilePassActive==1)
+  {
+    Ini->WriteBool("Security", "ProfilePassActive", 0);
+    Ini->WriteBool("Security", "AQQRestarter", 1);
+  }
+  delete Ini;
+
   //Odczyt sciezki prywatnego profilu wtyczek
   AnsiString PluginPath = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,(WPARAM)(hInstance),0));
   PluginPath = StringReplace(PluginPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
   //Odczyt PID AQQ  
   int PID = getpid();
   //Zapis PID do pliku
-  TIniFile *Ini = new TIniFile(PluginPath + "\\\\Restarter.ini");
+  Ini = new TIniFile(PluginPath + "\\\\Restarter.ini");
   Ini->WriteInteger("Restarter", "AQQPid", PID);
   Ini->WriteString("Restarter", "AQQPath", Application->ExeName);
   delete Ini;
@@ -87,7 +106,7 @@ extern "C"  __declspec(dllexport) PluginInfo* __stdcall AQQPluginInfo(DWORD AQQV
 {
   TPluginInfo.cbSize = sizeof(PluginInfo);
   TPluginInfo.ShortName = (wchar_t*)L"AQQ Restarter";
-  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,3,0);
+  TPluginInfo.Version = PLUGIN_MAKE_VERSION(1,0,4,0);
   TPluginInfo.Description = (wchar_t *)L"Szybki restart AQQ z pozycji menu";
   TPluginInfo.Author = (wchar_t *)L"Krzysztof Grochocki (Beherit)";
   TPluginInfo.AuthorMail = (wchar_t *)L"beherit666@vp.pl";
@@ -180,6 +199,25 @@ extern "C" int __declspec(dllexport) __stdcall Load(PluginLink *Link)
 
   if(FileExists(PluginPath + "\\\\Restarter.exe"))
    DeleteFile("Restarter.exe");
+
+  //Odczyt sciezki profilu
+  AnsiString UserPath = (wchar_t*)(TPluginLink.CallService(AQQ_FUNCTION_GETUSERDIR,(WPARAM)(hInstance),0));
+  UserPath = StringReplace(UserPath, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+  //Przywrocenie ustawien hasla
+  TIniFile *Ini = new TIniFile(UserPath + "\\\\Settings.ini");
+  bool AQQRestarter=Ini->ReadBool("Settings", "AQQRestarter", 0);
+  if(AQQRestarter==1)
+  {
+    Ini->WriteBool("Settings", "AutoLogin", 0);
+    Ini->DeleteKey("Settings", "AQQRestarter");
+  }
+  AQQRestarter=Ini->ReadBool("Security", "AQQRestarter", 0);
+  if(AQQRestarter==1)
+  {
+    Ini->WriteBool("Security", "ProfilePassActive", 1);
+    Ini->DeleteKey("Security", "AQQRestarter");
+  }
+  delete Ini; 
 
   //Utworzenie serwisu restartu
   TPluginLink.CreateServiceFunction(L"serwis_aqqrestart",AqqReStartService);
