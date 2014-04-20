@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------------
 USEFORM("RestarterFrm.cpp", RestarterForm);
 //---------------------------------------------------------------------------
-WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
+int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
 	try
 	{

@@ -5,10 +5,6 @@
 #include <inifiles.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
-#pragma link "IdBaseComponent"
-#pragma link "IdCoder"
-#pragma link "IdCoder3to4"
-#pragma link "IdCoderMIME"
 #pragma resource "*.dfm"
 TRestarterForm *RestarterForm;
 //---------------------------------------------------------------------------
@@ -109,10 +105,10 @@ void __fastcall TRestarterForm::ProcessTimerTimer(TObject *Sender)
 //Przechodzenie przez okno logowania
 void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
 {
-  //Zatrzymanie timera
+//Zatrzymanie timera
   Timer->Enabled = false;
   //Szukanie okna logowania
-  HWND hWindowHandle = FindWindow("TfrmLogon",NULL);
+  HWND hWindowHandle = FindWindow(L"TfrmLogon",NULL);
   //Jezeli okno zostalo znalezione
   if((hWindowHandle)&&(IsWindow(hWindowHandle))&&(IsWindowVisible(hWindowHandle)))
   {
@@ -120,15 +116,15 @@ void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
 	if(!Password.IsEmpty())
 	{
 	  //Szukanie kontrolki do wpisywania hasla
-	  hWindowHandle = FindWindowEx(hWindowHandle,NULL,"TsEdit",NULL);
+	  hWindowHandle = FindWindowEx(hWindowHandle,NULL,L"TsEdit",NULL);
 	  //Kontrolka zostala znaleziona
 	  if(hWindowHandle)
 	  {
 		//Umieszanie hasla w kontrolce
 		SendMessageW(hWindowHandle, WM_SETTEXT, NULL, (LPARAM)Password.w_str());
 		//Szukanie kontrolki przycisku OK
-		hWindowHandle = FindWindow("TfrmLogon",NULL);
-		hWindowHandle = FindWindowEx(hWindowHandle,NULL,"TsButton","OK");
+		hWindowHandle = FindWindow(L"TfrmLogon",NULL);
+		hWindowHandle = FindWindowEx(hWindowHandle,NULL,L"TsButton",L"OK");
 		//Kontrolka zostala znaleziona
 		if(hWindowHandle)
 		{
@@ -169,8 +165,8 @@ void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
 	else
 	{
       //Szukanie kontrolki przycisku OK
-	  hWindowHandle = FindWindow("TfrmLogon",NULL);
-	  hWindowHandle = FindWindowEx(hWindowHandle,NULL,"TsButton","OK");
+	  hWindowHandle = FindWindow(L"TfrmLogon",NULL);
+	  hWindowHandle = FindWindowEx(hWindowHandle,NULL,L"TsButton",L"OK");
 	  //Kontrolka zostala znaleziona
 	  if(hWindowHandle)
 	  {
@@ -210,15 +206,10 @@ void __fastcall TRestarterForm::TimerTimer(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-//Ukrywanie okna logowania i chmurki informacyjnej
+//Ukrywanie chmurki informacyjnej
 void __fastcall TRestarterForm::HideTimerTimer(TObject *Sender)
 {
-  //Oko logowania
-  //HWND hFrmLogon = FindWindow("TfrmLogon",NULL);
-  //if(hFrmLogon) ShowWindow(hFrmLogon, SW_HIDE);
-  //Chmurka informacyjna
-  HWND hFrmMiniStatus = FindWindow("TfrmMiniStatus",NULL);
+  HWND hFrmMiniStatus = FindWindow(L"TfrmMiniStatus",NULL);
   if(hFrmMiniStatus) ShowWindow(hFrmMiniStatus, SW_HIDE);
 }
 //---------------------------------------------------------------------------
-

@@ -1,14 +1,12 @@
-//---------------------------------------------------------------------------
 #include <vcl.h>
 #include <windows.h>
 #pragma hdrstop
 #pragma argsused
-#include "Aqq.h"
+#include <PluginAPI.h>
 #include <process.h>
 #include <inifiles.hpp>
 #define AQQRESTARTER_SYSTEM_RESTART L"AQQRestarter/System/Restart"
 #define AQQRESTARTER_SYSTEM_RESTARTING L"AQQRestarter/System/Restarting"
-//---------------------------------------------------------------------------
 
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
 {
@@ -46,14 +44,14 @@ UnicodeString GetThemeDir()
 //---------------------------------------------------------------------------
 
 //Zapisywanie zasobów
-bool SaveResourceToFile(char *FileName, char *res)
+bool SaveResourceToFile(UnicodeString FileName, UnicodeString Res)
 {
-  HRSRC hrsrc = FindResource(HInstance, res, RT_RCDATA);
+  HRSRC hrsrc = FindResource(HInstance, Res.w_str(), RT_RCDATA);
   if(hrsrc == NULL) return false;
   DWORD size = SizeofResource(HInstance, hrsrc);
   HGLOBAL hglob = LoadResource(HInstance, hrsrc);
   LPVOID rdata = LockResource(hglob);
-  HANDLE hFile = CreateFile(FileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+  HANDLE hFile = CreateFile(FileName.w_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
   DWORD writ;
   WriteFile(hFile, rdata, size, &writ, NULL);
   CloseHandle(hFile);
@@ -91,9 +89,9 @@ int __stdcall SystemRestart(WPARAM, LPARAM)
   delete Ini;
   //Wypakowanie programu do wspomgania restartu AQQ
   PluginUserDir = PluginUserDir + "\\\\Restarter.exe";
-  SaveResourceToFile(PluginUserDir.t_str(),"ID_EXE");
+  SaveResourceToFile(PluginUserDir,"ID_EXE");
   //Uruchomienie programu do wspomgania restartu AQQ
-  ShellExecute(NULL, "open", PluginUserDir.t_str(), NULL, NULL, SW_NORMAL);
+  ShellExecute(NULL, L"open", PluginUserDir.w_str(), NULL, NULL, SW_NORMAL);
   //Zamkniêcie AQQ
   PluginLink.CallService(AQQ_SYSTEM_RESTART,0,0);
   //Zwrot w funkcji
@@ -121,7 +119,7 @@ int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 	if(!FileExists(PluginUserDir+"\\\\AQQRestarter.png"))
 	{
 	  //Wypakowanie ikony
-	  SaveResourceToFile((PluginUserDir+"\\\\AQQRestarter.png").t_str(),"ID_PNG");
+	  SaveResourceToFile(PluginUserDir+"\\\\AQQRestarter.png","ID_PNG");
 	  //Aktualizacja ikony w interfejsie
 	  AQQRESTARTER = PluginLink.CallService(AQQ_ICONS_REPLACEPNGICON,AQQRESTARTER,(LPARAM)(PluginUserDir+"\\\\AQQRestarter.png").w_str());
 	  //Usuniecie ikony
@@ -209,7 +207,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
 	if(!FileExists(Path+"\\\\AQQRestarter.png"))
 	{
 	  //Wypakowanie ikony
-	  SaveResourceToFile((Path+"\\\\AQQRestarter.png").t_str(),"ID_PNG");
+	  SaveResourceToFile(Path+"\\\\AQQRestarter.png","ID_PNG");
 	  //Przypisanie ikony w interfejsie
 	  AQQRESTARTER = PluginLink.CallService(AQQ_ICONS_LOADPNGICON,0,(LPARAM)(Path+"\\\\AQQRestarter.png").w_str());
 	  //Usuniecie ikony
@@ -264,7 +262,7 @@ extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"AQQ Restarter";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,1,3,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(2,2,0,0);
   PluginInfo.Description = L"Szybki restart komunikatora z pozycji menu Program, menu kompaktowego lub menu makr z zasobnika systemowego.";
   PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
@@ -274,4 +272,3 @@ extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVe
   return &PluginInfo;
 }
 //---------------------------------------------------------------------------
-

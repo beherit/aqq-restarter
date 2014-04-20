@@ -2,7 +2,7 @@ object RestarterForm: TRestarterForm
   Left = 0
   Top = 0
   BorderStyle = bsNone
-  Caption = 'AQQRestarter'
+  Caption = 'AQQ Restarter'
   ClientHeight = 60
   ClientWidth = 60
   Color = clLime
@@ -92,7 +92,6 @@ object RestarterForm: TRestarterForm
     0000000000000000000000000000000000000000000000000000000000000000
     000000000000000000000000000000000000000000000000000000000000}
   OldCreateOrder = False
-  Position = poDesigned
   OnPaint = FormPaint
   OnShow = FormShow
   PixelsPerInch = 96
