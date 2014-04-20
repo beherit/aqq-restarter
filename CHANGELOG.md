@@ -1,3 +1,8 @@
+1.0.1.0
+-----
+* Przystosowanie pozycji ikonki do wersji AQQ 2.0.5.15+.
+* Wtyczka sprawdza czy w katalogu prywatnym wtyczek jest plik "AQQRestarter.png", je¿eli tak ustawia go jako grafikê przycisku.
+
 1.0.0.0
 -----
 * Zmiana sposobu restartowania (taka jak we wtyczce MD kameroka).
