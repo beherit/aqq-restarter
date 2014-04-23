@@ -118,6 +118,7 @@
         <Defines>_DEBUG;$(Defines)</Defines>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <VerInfo_Build>0</VerInfo_Build>
         <VerInfo_MinorVer>4</VerInfo_MinorVer>
         <VerInfo_Release>0</VerInfo_Release>
         <VerInfo_Keys>FileVersion=2.4.0.0;LegalCopyright=Krzysztof Grochocki;ProductName=AQQ Restarter;ProductVersion=2.0.0.0;CompanyName=Beherit Development;LegalTrademarks=Krzysztof Grochocki</VerInfo_Keys>
@@ -142,10 +143,6 @@
         <RcItem Include="Data\AQQRestarter.dll.png">
             <ResourceType>DATA</ResourceType>
             <ResourceId>SHARED</ResourceId>
-        </RcItem>
-        <RcItem Include="Data\FastAccess.png">
-            <ResourceType>DATA</ResourceType>
-            <ResourceId>FASTACCESS</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

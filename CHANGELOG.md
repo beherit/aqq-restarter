@@ -1,3 +1,9 @@
+2.5.0.0
+-----
+* Poprawki w procesie ładowania wtyczki.
+* Zmiana tekstu oraz pozycji elementu restartu.
+* Zastąpienie własnej ikony ikoną z kompozycji.
+
 2.4.0.0
 -----
 * Drobna optymalizacja kodu.
