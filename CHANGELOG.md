@@ -1,3 +1,7 @@
+2.5.1.0
+-----
+* Poprawki w tworzeniu elementów wtyczki.
+
 2.5.0.0
 -----
 * Poprawki w procesie ładowania wtyczki.
