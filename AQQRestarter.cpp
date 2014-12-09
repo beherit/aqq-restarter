@@ -36,7 +36,6 @@ int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved
 TPluginLink PluginLink;
 TPluginInfo PluginInfo;
 //FORWARD-AQQ-HOOKS----------------------------------------------------------
-INT_PTR __stdcall OnListReady(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall SystemRestart(WPARAM wParam, LPARAM lParam);
 //---------------------------------------------------------------------------
 
@@ -52,6 +51,7 @@ void BuildProgramItem()
 {
   //Ustalanie pozycji elementu "Zakoncz"
   TPluginItemDescriber PluginItemDescriber;
+  ZeroMemory(&PluginItemDescriber,sizeof(TPluginItemDescriber));
   PluginItemDescriber.cbSize = sizeof(TPluginItemDescriber);
   PluginItemDescriber.ParentName = (wchar_t*)L"muProgram";
   PluginItemDescriber.Name = (wchar_t*)L"Zakocz2";
@@ -112,17 +112,6 @@ void DestroyMacrosItem()
   PluginActionMacrosItem.pszName = L"AQQRestarterMacrosItem";
   //Usuwanie elementu z interfejsu
   PluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&PluginActionMacrosItem));
-}
-//---------------------------------------------------------------------------
-
-//Hook na zakonczenie ladowania listy kontaktow
-INT_PTR __stdcall OnListReady(WPARAM wParam, LPARAM lParam)
-{
-  //Tworzenie elementow w interfejsie
-  BuildProgramItem();
-  BuildMacrosItem();
-
-  return 0;
 }
 //---------------------------------------------------------------------------
 
@@ -195,15 +184,9 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
    ExtractRes((GetPluginUserDir()+"\\\\Shared\\\\AQQRestarter.dll.png").w_str(),L"SHARED",L"DATA");
   //Tworzenie serwisu restartu
   PluginLink.CreateServiceFunction(L"sAQQRestarterSystemRestart",SystemRestart);
-  //Hook na zakonczenie ladowania listy kontaktow
-  PluginLink.HookEvent(AQQ_CONTACTS_LISTREADY,OnListReady);
-  //Wszystkie moduly zostaly zaladowane
-  if(PluginLink.CallService(AQQ_SYSTEM_MODULESLOADED,0,0))
-  {
-	//Tworzenie elementow w interfejsie
-	BuildProgramItem();
-	BuildMacrosItem();
-  }
+  //Tworzenie elementow w interfejsie
+  BuildProgramItem();
+  BuildMacrosItem();
   
   return 0;
 }
@@ -217,8 +200,6 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Unload()
   DestroyMacrosItem();
   //Usuwanie serwisu restartu
   PluginLink.DestroyServiceFunction(SystemRestart);
-  //Wyladowanie wszystkich hookow
-  PluginLink.UnhookEvent(OnListReady);
 
   return 0;
 }
