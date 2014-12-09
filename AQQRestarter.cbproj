@@ -52,15 +52,16 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <SanitizedProjectName>AQQRestarter</SanitizedProjectName>
+        <VerInfo_Release>1</VerInfo_Release>
         <DCC_MaxStackSize>2097152</DCC_MaxStackSize>
         <ILINK_StackReserveSize>0x00200000</ILINK_StackReserveSize>
         <BCC_AutoDepCheck>false</BCC_AutoDepCheck>
         <DCC_DebugInformation>false</DCC_DebugInformation>
         <ShowGeneralMessages>true</ShowGeneralMessages>
-        <VerInfo_MinorVer>4</VerInfo_MinorVer>
+        <VerInfo_MinorVer>5</VerInfo_MinorVer>
         <ProjectType>VCppStyleDll</ProjectType>
         <_TCHARMapping>wchar_t</_TCHARMapping>
-        <VerInfo_Keys>FileVersion=2.4.0.0;LegalCopyright=Krzysztof Grochocki;ProductName=AQQ Restarter;ProductVersion=2.0.0.0;CompanyName=Beherit Development;LegalTrademarks=Krzysztof Grochocki</VerInfo_Keys>
+        <VerInfo_Keys>FileVersion=2.5.1.0;LegalCopyright=Krzysztof Grochocki;ProductName=AQQ Restarter;ProductVersion=2.0.0.0;CompanyName=Beherit Development;LegalTrademarks=Krzysztof Grochocki</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <Multithreaded>true</Multithreaded>
@@ -111,10 +112,14 @@
         <LinkPackageStatics>rtl.lib;vcl.lib</LinkPackageStatics>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <VerInfo_MinorVer>5</VerInfo_MinorVer>
+        <VerInfo_Release>1</VerInfo_Release>
         <Defines>NDEBUG;$(Defines)</Defines>
+        <VerInfo_Keys>FileVersion=2.5.1.0;LegalCopyright=Krzysztof Grochocki;ProductName=AQQ Restarter;ProductVersion=2.0.0.0;CompanyName=Beherit Development;LegalTrademarks=Krzysztof Grochocki</VerInfo_Keys>
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <ILINK_LibraryPath>$(BDS)\lib\win32\release\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <LinkPackageStatics>rtl.lib;vcl.lib;IndyProtocols.lib;IndyCore.lib;IndySystem.lib</LinkPackageStatics>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
