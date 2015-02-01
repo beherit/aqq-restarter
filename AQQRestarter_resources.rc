@@ -1,1 +1,3 @@
 SHARED DATA "Data\\AQQRestarter.dll.png"
+EN_CONST DATA "Languages\\EN\\Const.lng"
+PL_CONST DATA "Languages\\PL\\Const.lng"

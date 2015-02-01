@@ -23,8 +23,8 @@
 #include <windows.h>
 #include <IdHashMessageDigest.hpp>
 #include <PluginAPI.h>
+#include <LangAPI.hpp>
 #pragma hdrstop
-
 
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
 {
@@ -36,6 +36,7 @@ int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved
 TPluginLink PluginLink;
 TPluginInfo PluginInfo;
 //FORWARD-AQQ-HOOKS----------------------------------------------------------
+INT_PTR __stdcall OnLangCodeChanged(WPARAM wParam, LPARAM lParam);
 INT_PTR __stdcall SystemRestart(WPARAM wParam, LPARAM lParam);
 //---------------------------------------------------------------------------
 
@@ -57,30 +58,46 @@ void BuildProgramItem()
 	PluginItemDescriber.Name = (wchar_t*)L"Zakocz2";
 	TPluginAction Action = *(PPluginAction)PluginLink.CallService(AQQ_CONTROLS_GETPOPUPMENUITEM,0,(LPARAM)(&PluginItemDescriber));
 	//Wypelnianie struktury
-	TPluginAction PluginActionProgramItem;
-	ZeroMemory(&PluginActionProgramItem,sizeof(TPluginAction));
-	PluginActionProgramItem.cbSize = sizeof(TPluginAction);
-	PluginActionProgramItem.pszName = L"AQQRestarterProgramItem";
-	PluginActionProgramItem.pszCaption = L"Zrestartuj";
-	PluginActionProgramItem.Position = Action.Position - 1;
-	PluginActionProgramItem.IconIndex = 19;
-	PluginActionProgramItem.pszService = L"sAQQRestarterSystemRestart";
-	PluginActionProgramItem.pszPopupName = L"muProgram";
+	TPluginAction ProgramItem;
+	ZeroMemory(&ProgramItem,sizeof(TPluginAction));
+	ProgramItem.cbSize = sizeof(TPluginAction);
+	ProgramItem.pszName = L"AQQRestarterProgramItem";
+	ProgramItem.pszCaption = GetLangStr("Restart").w_str();
+	ProgramItem.Position = Action.Position - 1;
+	ProgramItem.IconIndex = 19;
+	ProgramItem.pszService = L"sAQQRestarterSystemRestart";
+	ProgramItem.pszPopupName = L"muProgram";
 	//Tworzenie elementu w interfejsie
-	PluginLink.CallService(AQQ_CONTROLS_CREATEPOPUPMENUITEM,0,(LPARAM)(&PluginActionProgramItem));
+	PluginLink.CallService(AQQ_CONTROLS_CREATEPOPUPMENUITEM,0,(LPARAM)(&ProgramItem));
 }
 //---------------------------------------------------------------------------
 
-//Usuwanie elementu z menu makr
+//Usuwanie elementu z menu Program
 void DestroyProgramItem()
 {
 	//Wypelnianie struktury
-	TPluginAction PluginActionProgramItem;
-	ZeroMemory(&PluginActionProgramItem,sizeof(TPluginAction));
-	PluginActionProgramItem.cbSize = sizeof(TPluginAction);
-	PluginActionProgramItem.pszName = L"AQQRestarterProgramItem";
+	TPluginAction ProgramItem;
+	ZeroMemory(&ProgramItem,sizeof(TPluginAction));
+	ProgramItem.cbSize = sizeof(TPluginAction);
+	ProgramItem.pszName = L"AQQRestarterProgramItem";
 	//Usuwanie elementu z interfejsu
-	PluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&PluginActionProgramItem));
+	PluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&ProgramItem));
+}
+//---------------------------------------------------------------------------
+
+//Aktualizacja elementu w menu Program
+void RebuildProgramItem()
+{
+	TPluginActionEdit ProgramItem;
+	ZeroMemory(&ProgramItem,sizeof(TPluginActionEdit));
+	ProgramItem.cbSize = sizeof(TPluginActionEdit);
+	ProgramItem.pszName = L"AQQRestarterProgramItem";
+	ProgramItem.Caption = GetLangStr("Restart").w_str();
+	ProgramItem.IconIndex = 19;
+	ProgramItem.Enabled = true;
+	ProgramItem.Visible = true;
+	ProgramItem.Checked = false;
+	PluginLink.CallService(AQQ_CONTROLS_EDITPOPUPMENUITEM,0,(LPARAM)(&ProgramItem));
 }
 //---------------------------------------------------------------------------
 
@@ -88,17 +105,17 @@ void DestroyProgramItem()
 void BuildMacrosItem()
 {
 	//Wypelnianie struktury
-	TPluginAction PluginActionMacrosItem;
-	ZeroMemory(&PluginActionMacrosItem,sizeof(TPluginAction));
-	PluginActionMacrosItem.cbSize = sizeof(TPluginAction);
-	PluginActionMacrosItem.pszName = L"AQQRestarterMacrosItem";
-	PluginActionMacrosItem.pszCaption = L"Zrestartuj";
-	PluginActionMacrosItem.Position = 15;
-	PluginActionMacrosItem.IconIndex = 19;
-	PluginActionMacrosItem.pszService = L"sAQQRestarterSystemRestart";
-	PluginActionMacrosItem.pszPopupName = L"popMacros";
+	TPluginAction MacrosItem;
+	ZeroMemory(&MacrosItem,sizeof(TPluginAction));
+	MacrosItem.cbSize = sizeof(TPluginAction);
+	MacrosItem.pszName = L"AQQRestarterMacrosItem";
+	MacrosItem.pszCaption = GetLangStr("Restart").w_str();
+	MacrosItem.Position = 15;
+	MacrosItem.IconIndex = 19;
+	MacrosItem.pszService = L"sAQQRestarterSystemRestart";
+	MacrosItem.pszPopupName = L"popMacros";
 	//Tworzenie elementu w interfejsie
-	PluginLink.CallService(AQQ_CONTROLS_CREATEPOPUPMENUITEM,0,(LPARAM)(&PluginActionMacrosItem));
+	PluginLink.CallService(AQQ_CONTROLS_CREATEPOPUPMENUITEM,0,(LPARAM)(&MacrosItem));
 }
 //---------------------------------------------------------------------------
 
@@ -106,12 +123,51 @@ void BuildMacrosItem()
 void DestroyMacrosItem()
 {
 	//Wypelnianie struktury
-	TPluginAction PluginActionMacrosItem;
-	ZeroMemory(&PluginActionMacrosItem,sizeof(TPluginAction));
-	PluginActionMacrosItem.cbSize = sizeof(TPluginAction);
-	PluginActionMacrosItem.pszName = L"AQQRestarterMacrosItem";
+	TPluginAction MacrosItem;
+	ZeroMemory(&MacrosItem,sizeof(TPluginAction));
+	MacrosItem.cbSize = sizeof(TPluginAction);
+	MacrosItem.pszName = L"AQQRestarterMacrosItem";
 	//Usuwanie elementu z interfejsu
-	PluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&PluginActionMacrosItem));
+	PluginLink.CallService(AQQ_CONTROLS_DESTROYPOPUPMENUITEM,0,(LPARAM)(&MacrosItem));
+}
+//---------------------------------------------------------------------------
+
+//Aktualizacja elementu w menu makr
+void RebuildMacrosItem()
+{
+	TPluginActionEdit MacrosItem;
+	ZeroMemory(&MacrosItem,sizeof(TPluginActionEdit));
+	MacrosItem.cbSize = sizeof(TPluginActionEdit);
+	MacrosItem.pszName = L"AQQRestarterMacrosItem";
+	MacrosItem.Caption = GetLangStr("Restart").w_str();
+	MacrosItem.IconIndex = 19;
+	MacrosItem.Enabled = true;
+	MacrosItem.Visible = true;
+	MacrosItem.Checked = false;
+	PluginLink.CallService(AQQ_CONTROLS_EDITPOPUPMENUITEM,0,(LPARAM)(&MacrosItem));
+}
+//---------------------------------------------------------------------------
+
+//Hook na zmiane lokalizacji
+INT_PTR __stdcall OnLangCodeChanged(WPARAM wParam, LPARAM lParam)
+{
+	//Czyszczenie cache lokalizacji
+	ClearLngCache();
+	//Pobranie sciezki do katalogu prywatnego uzytkownika
+	UnicodeString PluginUserDir = GetPluginUserDir();
+	//Ustawienie sciezki lokalizacji wtyczki
+	UnicodeString LangCode = (wchar_t*)lParam;
+	LangPath = PluginUserDir + "\\\\Languages\\\\AQQRestarter\\\\" + LangCode + "\\\\";
+	if(!DirectoryExists(LangPath))
+	{
+		LangCode = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETDEFLANGCODE,0,0);
+		LangPath = PluginUserDir + "\\\\Languages\\\\AQQRestarter\\\\" + LangCode + "\\\\";
+	}
+	//Aktualizacja lokalizacji w elementach intefejsu
+	RebuildProgramItem();
+	RebuildMacrosItem();
+
+	return 0;
 }
 //---------------------------------------------------------------------------
 
@@ -171,14 +227,46 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 {
 	//Linkowanie wtyczki z komunikatorem
 	PluginLink = *Link;
+	//Sciezka folderu prywatnego wtyczek
+	UnicodeString PluginUserDir = GetPluginUserDir();
+	//Tworzenie katalogow lokalizacji
+	if(!DirectoryExists(PluginUserDir+"\\\\Languages"))
+		CreateDir(PluginUserDir+"\\\\Languages");
+	if(!DirectoryExists(PluginUserDir+"\\\\Languages\\\\AQQRestarter"))
+		CreateDir(PluginUserDir+"\\\\Languages\\\\AQQRestarter");
+	if(!DirectoryExists(PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\EN"))
+		CreateDir(PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\EN");
+	if(!DirectoryExists(PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\PL"))
+		CreateDir(PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\PL");
+	//Wypakowanie plikow lokalizacji
+	//6F935720BBD0806F3E100D222C14D1B7
+	if(!FileExists(PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\EN\\\\Const.lng"))
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\EN\\\\Const.lng").w_str(),L"EN_CONST",L"DATA");
+	else if(MD5File(PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\EN\\\\Const.lng")!="6F935720BBD0806F3E100D222C14D1B7")
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\EN\\\\Const.lng").w_str(),L"EN_CONST",L"DATA");
+	//BB02FA50064DFCFD997520A90273642A
+	if(!FileExists(PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\PL\\\\Const.lng"))
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\PL\\\\Const.lng").w_str(),L"PL_CONST",L"DATA");
+	else if(MD5File(PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\PL\\\\Const.lng")!="BB02FA50064DFCFD997520A90273642A")
+		ExtractRes((PluginUserDir+"\\\\Languages\\\\AQQRestarter\\\\PL\\\\Const.lng").w_str(),L"PL_CONST",L"DATA");
+	//Ustawienie sciezki lokalizacji wtyczki
+	UnicodeString LangCode = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETLANGCODE,0,0);
+	LangPath = PluginUserDir + "\\\\Languages\\\\AQQRestarter\\\\" + LangCode + "\\\\";
+	if(!DirectoryExists(LangPath))
+	{
+		LangCode = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETDEFLANGCODE,0,0);
+		LangPath = PluginUserDir + "\\\\Languages\\\\AQQRestarter\\\\" + LangCode + "\\\\";
+	}
 	//Wypakiwanie ikonki AQQRestarter.dll.png
 	//9C5C93C35D61AF3149D8382A07E131FB
-	if(!DirectoryExists(GetPluginUserDir()+"\\\\Shared"))
-		CreateDir(GetPluginUserDir()+"\\\\Shared");
-	if(!FileExists(GetPluginUserDir()+"\\\\Shared\\\\AQQRestarter.dll.png"))
-		ExtractRes((GetPluginUserDir()+"\\\\Shared\\\\AQQRestarter.dll.png").w_str(),L"SHARED",L"DATA");
-	else if(MD5File(GetPluginUserDir()+"\\\\Shared\\\\AQQRestarter.dll.png")!="9C5C93C35D61AF3149D8382A07E131FB")
-		ExtractRes((GetPluginUserDir()+"\\\\Shared\\\\AQQRestarter.dll.png").w_str(),L"SHARED",L"DATA");
+	if(!DirectoryExists(PluginUserDir+"\\\\Shared"))
+		CreateDir(PluginUserDir+"\\\\Shared");
+	if(!FileExists(PluginUserDir+"\\\\Shared\\\\AQQRestarter.dll.png"))
+		ExtractRes((PluginUserDir+"\\\\Shared\\\\AQQRestarter.dll.png").w_str(),L"SHARED",L"DATA");
+	else if(MD5File(PluginUserDir+"\\\\Shared\\\\AQQRestarter.dll.png")!="9C5C93C35D61AF3149D8382A07E131FB")
+		ExtractRes((PluginUserDir+"\\\\Shared\\\\AQQRestarter.dll.png").w_str(),L"SHARED",L"DATA");
+	//Hook na zmiane lokalizacji
+	PluginLink.HookEvent(AQQ_SYSTEM_LANGCODE_CHANGED,OnLangCodeChanged);
 	//Tworzenie serwisu restartu
 	PluginLink.CreateServiceFunction(L"sAQQRestarterSystemRestart",SystemRestart);
 	//Tworzenie elementow w interfejsie
@@ -197,6 +285,8 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Unload()
 	DestroyMacrosItem();
 	//Usuwanie serwisu restartu
 	PluginLink.DestroyServiceFunction(SystemRestart);
+	//Wyladowanie wszystkich hookow
+	PluginLink.UnhookEvent(OnLangCodeChanged);
 
 	return 0;
 }
