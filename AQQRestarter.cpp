@@ -297,7 +297,7 @@ extern "C" PPluginInfo __declspec(dllexport) __stdcall AQQPluginInfo(DWORD AQQVe
 {
 	PluginInfo.cbSize = sizeof(TPluginInfo);
 	PluginInfo.ShortName = L"AQQ Restarter";
-	PluginInfo.Version = PLUGIN_MAKE_VERSION(2,5,1,0);
+	PluginInfo.Version = PLUGIN_MAKE_VERSION(2,6,0,0);
 	PluginInfo.Description = L"Szybki restart komunikatora z pozycji menu Program, menu kompaktowego lub menu makr z zasobnika systemowego.";
 	PluginInfo.Author = L"Krzysztof Grochocki";
 	PluginInfo.AuthorMail = L"kontakt@beherit.pl";

@@ -1,3 +1,7 @@
+2.6.0.0
+-----
+* Obsługa lokalizacji (polskiej i angielskiej).
+
 2.5.1.0
 -----
 * Poprawki w tworzeniu elementów wtyczki.
